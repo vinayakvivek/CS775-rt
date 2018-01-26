@@ -64,7 +64,7 @@ namespace rt
 	}
 
 	/// Returns true if the vectors components are equal between epsilon tolerance
-	inline bool is_equal(const Vector3f& v1, const Vector3f& v2) 
+	inline bool is_equal(const Vector3f& v1, const Vector3f& v2)
 	{
 		float v1_x = v1.data()[0];
 		float v1_y = v1.data()[1];
@@ -84,8 +84,13 @@ namespace rt
 	inline float deg2rad(float value) { return value * (M_PI / 180.0f); }
 
 	///Clamp a float to be between 0.0 and 1.0.
-    inline float clamp(float x){ return x<0.0f ? 0.0f : x>1.0f ? 1.0f : x; }
-    
-    ///Cast a float between 0.0 and 1.0 to a char. A gamme value of 2.2 is used.
-    inline char to_char(float x){ return char(pow(clamp(x),1/2.2)*255+.5); }
+  inline float clamp(float x){ return x<0.0f ? 0.0f : x>1.0f ? 1.0f : x; }
+
+  ///Cast a float between 0.0 and 1.0 to a char. A gamme value of 2.2 is used.
+  inline char to_char(float x){ return char(pow(clamp(x),1/2.2)*255+.5); }
+
+  /// random generator
+  inline double erand48() {
+    return (double)rand() / (double)RAND_MAX;
+  }
 }

@@ -10,7 +10,7 @@ void rt::render(const scene_t* scn)
 	unsigned int w=scn->img->get_width();
 	unsigned int h=scn->img->get_height();
 
-  scn->cam->print(std::cout);
+  // scn->cam->print(std::cout);
 
 	for (int j = h-1; j >= 0; --j)
 	{
@@ -18,14 +18,13 @@ void rt::render(const scene_t* scn)
 		{
 			ray_t ray;
       color_t col(1.0);
-			int d;
 
       // Eigen::Vector2f psample=scn->img->sample_pixel(i,j);
       // color_t col = scn->cam->sample_ray(ray, psample);
 
       ray = scn->cam->get_ray(float(i)/float(w), float(j)/float(w));
 
-			col *= scn->intg->radiance(scn, ray, d);
+			col *= scn->intg->radiance(scn, ray, 0);
 
 			scn->img->set_pixel(i, j, col);
 		}

@@ -36,7 +36,7 @@ namespace rt
 
 	/**
 	 * \brief This is the abstract base class for all integrators.
-	 * The integrator computes the radiance estimate along a ray. 
+	 * The integrator computes the radiance estimate along a ray.
 	 **/
 	class integrator_t
 	{
@@ -56,7 +56,7 @@ namespace rt
 		virtual std::string get_name(void) const = 0;
 
 		///Returns the radiance estimate along ray _ray, for scene scn, at bounce depth d.
-		virtual color_t radiance(const scene_t* scn, ray_t& _ray, int& d) const = 0;
+		virtual color_t radiance(const scene_t* scn, ray_t& _ray, int d) const = 0;
 	};
 
 	/**
@@ -65,11 +65,11 @@ namespace rt
 	class whitted_integrator_t : public integrator_t
 	{
 	public:
-		
+
 		/// Constructor
 		whitted_integrator_t() { }
 		/// Constructor
-		whitted_integrator_t(int _d):integrator_t(_d) { } 
+		whitted_integrator_t(int _d):integrator_t(_d) { }
 		/// Destructor
 		virtual ~whitted_integrator_t() { }
 
@@ -77,6 +77,6 @@ namespace rt
 		virtual std::string get_name(void) const {return "whitted";}
 
 		/// Returns the radiance estimate along ray _ray, for scene scn, at bounce depth d.
-		virtual color_t radiance(const scene_t* scn, ray_t& _ray, int& d) const;
+		virtual color_t radiance(const scene_t* scn, ray_t& _ray, int d) const;
 	};
 }

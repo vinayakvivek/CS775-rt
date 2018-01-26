@@ -4,23 +4,42 @@
 
 using namespace rt;
 
-color_t whitted_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int& d) const
+void reflect(const ray_t &incident_ray, const Vector3f &N, ray_t &reflected_ray) {
+	Vector3f I = incident_ray.direction.normalized();
+	reflected_ray.direction = I - 2.0 * N.dot(I) * N;
+}
+
+// return: false ==> total internal reflection
+bool refract(const ray_t &incident_ray, const Vector3f &N, float eta, ray_t &refracted_ray) {
+	Vector3f I = incident_ray.direction.normalized();
+  float dt = I.dot(N);
+  float discriminant = 1.0 - eta*eta*(1 - dt*dt);
+  if (discriminant > 0) {
+    refracted_ray.direction = eta * (I - N*dt) - N*sqrt(discriminant);
+    return true;
+  }
+  return false;
+}
+
+double schlick(double cosine, double eta) {
+  double r0 = (1 - eta) / (1 + eta);
+  r0 = r0 * r0;
+  return r0 + (1 - r0)*pow((1 - cosine), 5);
+}
+
+color_t whitted_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) const
 {
 	bool found_intersection=false;
 	std::vector<object_t*>::const_iterator oit;
 	hit_t hit, minhit;
 	Eigen::Vector3f hitpt, normal;
 
-	for (oit=_scn->objs.begin(); oit!=_scn->objs.end(); oit++)
-	{
-		if ((*oit)->intersect(hit, _ray))
-		{
+	for (oit=_scn->objs.begin(); oit!=_scn->objs.end(); oit++) {
+		if ((*oit)->intersect(hit, _ray)) {
 		  _ray.maxt = hit.second;
 		  minhit = hit;
-
 		  hitpt = _ray.origin+_ray.maxt*_ray.direction;
 		  normal = (*oit)->get_normal(hitpt);
-
 		  found_intersection = true;
 		}
 	}
@@ -34,10 +53,50 @@ color_t whitted_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int& d)
 
 	color_t d_col(0.0);
 	std::list<light_t*>::const_iterator lit;
-	for(lit=_scn->lits.begin(); lit!=_scn->lits.end(); lit++)
-	{
+	for(lit=_scn->lits.begin(); lit!=_scn->lits.end(); lit++) {
 		d_col += (*lit)->direct(hitpt, _ray, normal, minhit.first->get_material(), _scn);
 	}
+
+	if (d > _scn->intg->depth) {
+		d_col = _scn->img->get_bgcolor();
+	} else {
+		bool can_transmit = minhit.first->get_material()->get_is_transmit();
+		bool can_reflect = minhit.first->get_material()->get_is_reflect();
+		ray_t scattered_ray;
+		scattered_ray.origin = hitpt + normal * EPSILON;
+
+		if (can_transmit && can_reflect) {
+			float cosine = _ray.direction.normalized().dot(normal);
+			float ni_over_nt;
+			float eta = minhit.first->get_material()->get_eta();
+
+	    if (cosine > 0) {
+	      normal = -normal;
+	      ni_over_nt = eta;
+	      cosine = eta * cosine;
+	    } else {
+	      ni_over_nt = 1.0 / eta;
+	      cosine = -cosine;
+	    }
+
+	    // erand48() > schlick(cosine, eta)
+			if (refract(_ray, normal, ni_over_nt, scattered_ray)) {
+				// refract
+				d_col += minhit.first->get_material()->get_transmit() * _scn->intg->radiance(_scn, scattered_ray, d + 1);
+			} else {
+				// reflect (or total internal reflection)
+				reflect(_ray, normal, scattered_ray);
+				d_col += minhit.first->get_material()->get_reflect() * _scn->intg->radiance(_scn, scattered_ray, d + 1);
+			}
+
+		} else if (can_reflect) {
+			// reflection only
+			reflect(_ray, normal, scattered_ray);
+			d_col += minhit.first->get_material()->get_reflect() * _scn->intg->radiance(_scn, scattered_ray, d + 1);
+		}
+	}
+
+	// d_col += minhit.first->get_material()->get_diffuse() * 0.1;
 
 	return d_col;
 }

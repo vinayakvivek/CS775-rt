@@ -59,7 +59,7 @@
 </materials>
 
 <objects>
-	<sphere material="diffuse-red">
+	<sphere material="glass">
 		<center vector3="-0.5 0.0 -4.0" />
 		<radius float="0.5" />
 	</sphere>
@@ -78,13 +78,19 @@
 	<pointlight>
 		<position vector3="0.0 600.0 100.0" />
 		<color color="1.0 1.0 1.0" />
-		<ka float="0.2" />
+		<ka float="0.4" />
+	</pointlight>
+
+	<pointlight>
+		<position vector3="-100.0 200.0 -10.0" />
+		<color color="0.5 1.0 1.0" />
+		<ka float="0.4" />
 	</pointlight>
 </lights>
 
 <integrator>
 	<whitted>
-		<depth-of-recursion int="1" />
+		<depth-of-recursion int="10" />
 	</whitted>
 </integrator>
 
