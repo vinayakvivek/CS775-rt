@@ -11,7 +11,7 @@ void rt::render(const scene_t* scn)
 	unsigned int h=scn->img->get_height();
 
   // scn->cam->print(std::cout);
-  int nspp = 100;
+  int nspp = 1000;
   float steps = w*h, step = 0;
 
 	for (int j = h-1; j >= 0; --j)
@@ -24,8 +24,6 @@ void rt::render(const scene_t* scn)
       fprintf(stderr,"\rRendering (%d nspp) %5.2f%%", nspp, 100.0 * step / steps);
       step += 1;
 
-      // Eigen::Vector2f psample=scn->img->sample_pixel(i,j);
-      // color_t col = scn->cam->sample_ray(ray, psample);
       for (int s = 0; s < nspp; ++s) {
         ray = scn->cam->get_ray(float(i - 0.5 + erand48())/float(w), float(j - 0.5 + erand48())/float(w));
   			col += scn->intg->radiance(scn, ray, 0);
@@ -57,10 +55,6 @@ int main(int argc, char **argv)
 
         unsigned int w = scn.img->get_width();
         unsigned int h = scn.img->get_height();
-        // Vector3f eye(0.0, -5.0, 10.0);
-        // Vector3f lookat(0.0, 1.0, 0.0);
-        // Vector3f vup(0.0, 1.0, 0.0);
-        // float vfov = 20.0;
 
         Vector3f eye = scn.cam->get_eye();
         Vector3f lookat = scn.cam->get_lookat();

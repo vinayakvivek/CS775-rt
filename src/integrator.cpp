@@ -46,9 +46,10 @@ color_t whitted_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 
 	if (!found_intersection) {
 		// std::cout << "no intersection!\n";
-		Vector3f unit_direction = _ray.direction.normalized();
-	  float t = 0.5f * (unit_direction.y() + 1.0f);
-	  return float(1.0 - t) * color_t(1.0, 1.0, 1.0) + t * color_t(0.5, 0.7, 1.0);
+		// Vector3f unit_direction = _ray.direction.normalized();
+	 //  float t = 0.5f * (unit_direction.y() + 1.0f);
+	 //  return float(1.0 - t) * color_t(1.0, 1.0, 1.0) + t * color_t(0.5, 0.7, 1.0);
+		return _scn->img->get_bgcolor();
 	}
 
 	color_t d_col(0.0);
