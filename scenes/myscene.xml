@@ -14,8 +14,8 @@
 </image>
 
 <materials>
-	<simplemat id="diffuse">
-		<diffuse color="0.7 0.2 0.2" />
+	<simplemat id="diffuse-white">
+		<diffuse color=".75 .75 .75" />
 		<specular color="0.0 0.0 0.0" />
 		<reflect color="0.0 0.0 0.0" />
 		<transmit color="0.0 0.0 0.0" />
@@ -24,8 +24,8 @@
 		<isreflect bool="false"/>
 		<istransmit bool="false"/>
 	</simplemat>
-	<simplemat id="new">
-		<diffuse color="0.75 0.25 0.25" />
+	<simplemat id="diffuse-red">
+		<diffuse color=".75 .25 .25" />
 		<specular color="0.0 0.0 0.0" />
 		<reflect color="0.0 0.0 0.0" />
 		<transmit color="0.0 0.0 0.0" />
@@ -34,6 +34,17 @@
 		<isreflect bool="false"/>
 		<istransmit bool="false"/>
 	</simplemat>
+
+	<simplemat id="metal">
+        <diffuse color="0.5 0.5 0.5" />
+        <specular color="0.8 0.8 0.8" />
+        <reflect color="1.0 1.0 1.0" />
+        <transmit color="0.0 0.0 0.0" />
+        <eta float="0.0"/>
+        <n float="10" />
+        <isreflect bool="true"/>
+        <istransmit bool="false"/>
+    </simplemat>
 
 	<simplemat id="glass">
 		<diffuse color="0.5 0.5 0.5" />
@@ -48,16 +59,16 @@
 </materials>
 
 <objects>
-	<sphere material="diffuse">
+	<sphere material="diffuse-red">
 		<center vector3="-0.5 0.0 -4.0" />
 		<radius float="0.5" />
 	</sphere>
-	<sphere material="new">
+	<sphere material="metal">
 		<center vector3="0.5 0.0 -2.0" />
 		<radius float="0.5" />
 	</sphere>
 
-	<sphere material="new">
+	<sphere material="diffuse-white">
 		<center vector3="0.0 -1000.5 0.0" />
 		<radius float="1000" />
 	</sphere>
