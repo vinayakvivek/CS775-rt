@@ -36,7 +36,7 @@ color_t whitted_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int& d)
 	std::list<light_t*>::const_iterator lit;
 	for(lit=_scn->lits.begin(); lit!=_scn->lits.end(); lit++)
 	{
-		d_col += (*lit)->direct(hitpt, normal, minhit.first->get_material(), _scn);
+		d_col += (*lit)->direct(hitpt, _ray, normal, minhit.first->get_material(), _scn);
 	}
 
 	return d_col;

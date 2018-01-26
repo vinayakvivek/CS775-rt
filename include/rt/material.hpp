@@ -60,6 +60,9 @@ namespace rt
 		/// Returns the shininess value
 		virtual float get_shininess(void) const = 0;
 
+		virtual bool get_is_reflect(void) const = 0;
+		virtual bool get_is_transmit(void) const = 0;
+
 		/// Prints information about the material to the stream.
 		virtual void print(std::ostream &stream) const = 0;
 	};
@@ -102,9 +105,9 @@ namespace rt
 		virtual float get_shininess(void) const;
 
 		/// Returns true if surface reflects, else returns false.
-		bool get_is_reflect(void) const;
+		virtual bool get_is_reflect(void) const;
 		/// Returns false if surface transmits, else returns false.
-		bool get_is_transmit(void) const;
+		virtual bool get_is_transmit(void) const;
 
 		/// Prints information to streams.
 		virtual void print(std::ostream &stream) const;

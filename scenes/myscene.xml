@@ -1,9 +1,9 @@
 <rt-scene>
 
 <camera>
-	<eye 	vector3="0.0 -0.5 2.0" />
-	<lookat	vector3="0.0 -0.5 0.0" />
-	<up		vector3="0.0 1.0 0.0" />
+	<eye 	vector3="0.0 0.5 2.0" />
+	<lookat	vector3="0.0 0.5 0.0" />
+	<up		vector3="0.0 -1.0 0.0" />
 	<fov	angle="50 deg" />
 </camera>
 
@@ -58,7 +58,7 @@
 	</sphere>
 
 	<sphere material="new">
-		<center vector3="0.0 1000.5 0.0" />
+		<center vector3="0.0 -1000.5 0.0" />
 		<radius float="1000" />
 	</sphere>
 </objects>

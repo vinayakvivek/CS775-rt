@@ -49,18 +49,18 @@ namespace rt
 		/// Destructon
 		virtual ~light_t();
 
-		/** 
+		/**
 		* Returns the direct illumination estimate for the point hitpt, where the surface normal is normal, material is mat.
 		* Scene is passed so that the camera position, and the objects can be used for computing the specular component
 		* of direct illumination and the shadow computations.
-		**/ 
-		virtual color_t direct(const Vector3f& hitpt, const Vector3f& normal, const material_t* mat, const scene_t* scn) const = 0;
+		**/
+		virtual color_t direct(const Vector3f& hitpt, const ray_t &view_ray, const Vector3f& normal, const material_t* mat, const scene_t* scn) const = 0;
 
 		/// Prints information about the light to the stream.
 		virtual void print(std::ostream &stream) const = 0;
 	};
 
-	/** 
+	/**
 	 * \brief This is the class for a positional point light source.
 	 **/
 	class point_light_t : public light_t
@@ -79,12 +79,12 @@ namespace rt
 		/// Destructor
 		virtual ~point_light_t();
 
-		/** 
+		/**
 		* Returns the direct illumination estimate for the point hitpt, where the surface normal is normal, material is mat.
 		* Scene is passed so that the camera position, and the objects can be used for computing the specular component
 		* of direct illumination and the shadow computations.
-		**/ 
-		virtual color_t direct(const Vector3f& hitpt, const Vector3f& normal, const material_t* mat, const scene_t* scn) const;
+		**/
+		virtual color_t direct(const Vector3f& hitpt, const ray_t &view_ray, const Vector3f& normal, const material_t* mat, const scene_t* scn) const;
 
 		/// Prints information about the light to the stream.
 		virtual void print(std::ostream &stream) const;
