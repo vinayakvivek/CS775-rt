@@ -79,8 +79,7 @@ color_t whitted_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 	      cosine = -cosine;
 	    }
 
-	    // erand48() > schlick(cosine, eta)
-			if (refract(_ray, normal, ni_over_nt, scattered_ray)) {
+			if (erand48() > schlick(cosine, eta) && refract(_ray, normal, ni_over_nt, scattered_ray)) {
 				// refract
 				d_col += minhit.first->get_material()->get_transmit() * _scn->intg->radiance(_scn, scattered_ray, d + 1);
 			} else {

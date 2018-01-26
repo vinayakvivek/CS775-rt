@@ -1,7 +1,7 @@
 <rt-scene>
 
 <camera>
-	<eye 	vector3="0.0 0.5 2.0" />
+	<eye 	vector3="0.0 0.5 3.0" />
 	<lookat	vector3="0.0 0.5 0.0" />
 	<up		vector3="0.0 -1.0 0.0" />
 	<fov	angle="50 deg" />
@@ -49,8 +49,8 @@
 	<simplemat id="glass">
 		<diffuse color="0.5 0.5 0.5" />
 		<specular color="0.1 0.1 0.1" />
-		<reflect color="0.1 0.1 0.1" />
-		<transmit color="0.9 0.9 0.9" />
+		<reflect color="1.0 1.0 1.0" />
+		<transmit color="1.0 1.0 1.0" />
 		<eta float="1.5"/>
 		<n float="100" />
 		<isreflect bool="true"/>
@@ -59,11 +59,11 @@
 </materials>
 
 <objects>
-	<sphere material="glass">
+	<sphere material="metal">
 		<center vector3="-0.5 0.0 -4.0" />
 		<radius float="0.5" />
 	</sphere>
-	<sphere material="metal">
+	<sphere material="glass">
 		<center vector3="0.5 0.0 -2.0" />
 		<radius float="0.5" />
 	</sphere>
@@ -80,17 +80,17 @@
 		<color color="1.0 1.0 1.0" />
 		<ka float="0.4" />
 	</pointlight>
-
+<!--
 	<pointlight>
 		<position vector3="-100.0 200.0 -10.0" />
 		<color color="0.5 1.0 1.0" />
 		<ka float="0.4" />
-	</pointlight>
+	</pointlight> -->
 </lights>
 
 <integrator>
 	<whitted>
-		<depth-of-recursion int="10" />
+		<depth-of-recursion int="50" />
 	</whitted>
 </integrator>
 

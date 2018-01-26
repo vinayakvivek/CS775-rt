@@ -11,20 +11,26 @@ void rt::render(const scene_t* scn)
 	unsigned int h=scn->img->get_height();
 
   // scn->cam->print(std::cout);
+  int nspp = 100;
+  float steps = w*h, step = 0;
 
 	for (int j = h-1; j >= 0; --j)
 	{
 		for (int i = 0; i < w; ++i)
 		{
 			ray_t ray;
-      color_t col(1.0);
+      color_t col(0.0);
+
+      fprintf(stderr,"\rRendering (%d nspp) %5.2f%%", nspp, 100.0 * step / steps);
+      step += 1;
 
       // Eigen::Vector2f psample=scn->img->sample_pixel(i,j);
       // color_t col = scn->cam->sample_ray(ray, psample);
-
-      ray = scn->cam->get_ray(float(i)/float(w), float(j)/float(w));
-
-			col *= scn->intg->radiance(scn, ray, 0);
+      for (int s = 0; s < nspp; ++s) {
+        ray = scn->cam->get_ray(float(i - 0.5 + erand48())/float(w), float(j - 0.5 + erand48())/float(w));
+  			col += scn->intg->radiance(scn, ray, 0);
+      }
+      col /= nspp;
 
 			scn->img->set_pixel(i, j, col);
 		}
