@@ -52,7 +52,7 @@ namespace rt
 		/// Constructor
 		sphere_t(material_t* _mat);
 		/// Constructor
-		sphere_t(material_t* _mat, Eigen::Vector3f _c, float _r);
+		sphere_t(material_t* _mat, Eigen::Vector3f _c, float _r, std::string texture_file);
 		/// Destuctor
 		virtual ~sphere_t();
 

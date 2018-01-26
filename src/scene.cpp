@@ -252,9 +252,12 @@ int scene_t::parse_objects(XMLElement* _elm, const std::list<material_t*>& matli
 
 object_t* scene_t::parse_object_sphere(XMLElement* _elm, const std::list<material_t*>& matlist)
 {
-	return (object_t*)(new sphere_t(find_material(parse_parameter(_elm, "material"),	matlist),
-									parse_vector3(_elm,  "center"),
-									parse_float(_elm, "radius")));
+	return (object_t*)(new sphere_t(
+											find_material(parse_parameter(_elm, "material"),	matlist),
+											parse_vector3(_elm,  "center"),
+											parse_float(_elm, "radius"),
+											parse_property(_elm, "texture", "string")
+										));
 }
 
 int scene_t::parse_materials(XMLElement* _elm)

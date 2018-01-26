@@ -38,7 +38,7 @@
 	<simplemat id="metal">
         <diffuse color="0.5 0.5 0.5" />
         <specular color="0.8 0.8 0.8" />
-        <reflect color="0.0 0.0 0.0" />
+        <reflect color="1.0 1.0 1.0" />
         <transmit color="0.0 0.0 0.0" />
         <eta float="0.0"/>
         <n float="10" />
@@ -62,15 +62,18 @@
 	<sphere material="metal">
 		<center vector3="-0.5 0.0 -4.0" />
 		<radius float="0.5" />
+		<texture string="./textures/globe.bmp" />
 	</sphere>
-	<sphere material="diffuse-red">
+	<sphere material="diffuse-white">
 		<center vector3="0.5 0.0 -2.0" />
 		<radius float="0.5" />
+		<texture string="./textures/iu.bmp" />
 	</sphere>
 
 	<sphere material="diffuse-white">
 		<center vector3="0.0 -1000.5 0.0" />
 		<radius float="1000" />
+		<texture string="" />
 	</sphere>
 </objects>
 

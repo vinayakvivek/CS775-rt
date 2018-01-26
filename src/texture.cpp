@@ -4,10 +4,14 @@ using namespace rt;
 
 texture_t::texture_t(const std::string &file_name) {
   image_file = file_name;
+  has_loaded = false;
+
+  if (file_name == "")
+    return;
 
   std::ifstream f(file_name);
   if (!f.is_open()) {
-    std::cout << "file '" <<  file_name << "' does not exist.\n";
+    std::cout << "texture file '" <<  file_name << "' does not exist.\n";
   } else {
     std::string str;
 
@@ -28,10 +32,15 @@ texture_t::texture_t(const std::string &file_name) {
     for (int i = 0; i < size; ++i) {
       data[i] = *(char*)&str[54 + i];
     }
+
+    has_loaded = true;
   }
 }
 
 color_t texture_t::get_color(float u, float v) const {
+  if (!has_loaded)
+    return color_t(1.0, 1.0, 1.0);
+
   int x = (int)(u * width);
   int y = (int)(v * height);
 
@@ -46,4 +55,9 @@ color_t texture_t::get_color(float u, float v) const {
 
   color_t col(r, g, b);
   return col;
+}
+
+texture_t::~texture_t() {
+  if (has_loaded)
+    delete [] data;
 }
