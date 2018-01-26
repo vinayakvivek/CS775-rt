@@ -29,7 +29,7 @@
 
 /**
  * \brief Everything in rt is a part of this namespace.
- */ 
+ */
 namespace rt
 {
 	/**
@@ -37,7 +37,7 @@ namespace rt
 	 */
 	class camera_t
 	{
-	private:	
+	private:
 		/// Since the cam2world is set to identity by default, these are not used.
 		/// To use these, add the computation of cam2world to init()
 		/// Default eye is at (0,0,0), lookat is (0,0,1), up is (0,1,0)
@@ -60,6 +60,14 @@ namespace rt
 		/// WCS to VCS transform
 		transform_t cam2world;
 
+		/// custom
+		Vector3f lower_left_corner;
+		Vector3f horizontal;
+		Vector3f vertical;
+		Vector3f origin;
+		float lens_radius;
+		Vector3f u, v, w;
+
 		/// Compute the transforms from parameters
 		void init(void);
 
@@ -67,10 +75,12 @@ namespace rt
 
 		/// Default constructor
 		camera_t();
-		
+
 		/// Constructor
 		camera_t(const Vector3f _lat, const Vector3f _eye, const Vector3f _up, float _fov=30.0, float near=1e-4f, float far=1e4f);
-		
+
+		camera_t(Vector3f eye, Vector3f lookat, Vector3f vup, float vfov, float aspect, float aperture, float focus_dist);
+
 		/// Copy Constructor
 		camera_t(const camera_t &_cam);
 
@@ -79,7 +89,7 @@ namespace rt
 
 		/// Return the lookat
 		const Vector3f get_lookat(void);
-		
+
 		/// Return the eye
 		const Vector3f get_eye(void);
 
@@ -94,6 +104,9 @@ namespace rt
 
 		/// Generate a ray from the camera center in the direction of _pixelpos
 		color_t sample_ray(ray_t &ray, const Vector2f& _pixelpos) const;
+
+		/// get ray
+		ray_t get_ray(float s, float t) const;
 
 		/// Print the camera to a stream
 		void print(std::ostream &stream);

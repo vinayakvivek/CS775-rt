@@ -17,25 +17,27 @@ color_t whitted_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int& d)
 		{
 		  _ray.maxt = hit.second;
 		  minhit = hit;
-		  
+
 		  hitpt = _ray.origin+_ray.maxt*_ray.direction;
 		  normal = (*oit)->get_normal(hitpt);
 
-		  found_intersection=true;
+		  found_intersection = true;
 		}
-		
 	}
-	
+
+	if (!found_intersection) {
+		// std::cout << "no intersection!\n";
+		Vector3f unit_direction = _ray.direction.normalized();
+	  float t = 0.5f * (unit_direction.y() + 1.0f);
+	  return float(1.0 - t) * color_t(1.0, 1.0, 1.0) + t * color_t(0.5, 0.7, 1.0);
+	}
+
 	color_t d_col(0.0);
-	if(found_intersection)
+	std::list<light_t*>::const_iterator lit;
+	for(lit=_scn->lits.begin(); lit!=_scn->lits.end(); lit++)
 	{
-		std::list<light_t*>::const_iterator lit;
-		for(lit=_scn->lits.begin(); lit!=_scn->lits.end(); lit++)
-		{
-			d_col += (*lit)->direct(hitpt, normal, minhit.first->get_material(), _scn);
-		}
+		d_col += (*lit)->direct(hitpt, normal, minhit.first->get_material(), _scn);
 	}
-	else d_col = _scn->img->get_bgcolor();
 
 	return d_col;
 }

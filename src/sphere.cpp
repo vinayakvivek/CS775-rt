@@ -9,32 +9,27 @@ sphere_t::~sphere_t() { }
 
 bool sphere_t::intersect(hit_t& result, const ray_t& _ray) const
 {
-	Vector3f r2c = center - _ray.origin;
-	const float b = r2c.dot(_ray.direction);
-	float d = b*b - r2c.dot(r2c) + radius*radius;
+	Vector3f oc = _ray.origin - center;
+	float a = _ray.direction.dot(_ray.direction);
+	float _b = _ray.direction.dot(oc);
+	float c = oc.dot(oc) - radius * radius;
+	float discriminant = _b*_b - a*c;
 
-	if (d < 0)
+	if (discriminant > 0) {
+		float sqr_d = sqrt(discriminant);
+		float temp = (-_b - sqr_d) / a;
+		if (temp < _ray.maxt && temp > _ray.mint) {
+			result = hit_t(this, temp);
+			return true;
+		}
+		temp = (-_b + sqr_d) / a;
+		if (temp < _ray.maxt && temp > _ray.mint) {
+			result = hit_t(this, temp);
+			return true;
+		}
 		return false;
-	else
-		d = sqrt(d);
-
-	float t;
-
-	t=b-d;
-	if (!is_zero(t))
-	{
-		result = hit_t(this, t);
 	}
-	else 
-	{
-		t = b+d;
-		if (!is_zero(t)) 
-			result = hit_t(this,t);
-		else return false;
-	}
-
-	return t >= _ray.mint && t <= _ray.maxt;
-
+	return false;
 }
 
 Eigen::Vector3f sphere_t::get_normal(Eigen::Vector3f& _p) const
@@ -53,7 +48,7 @@ material_t* sphere_t::get_material(void) const
 void sphere_t::print(std::ostream &stream) const
 {
 	Eigen::IOFormat CommaInitFmt(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", ", ", "", "", "[ ", " ]");
-	
+
 	stream<<"Object Properties: -------------------------------"<<std::endl;
 	stream<<"Type: Sphere"<<std::endl;
 	stream<<"Center: "<<center.format(CommaInitFmt)<<std::endl;

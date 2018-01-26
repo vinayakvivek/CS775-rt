@@ -80,6 +80,24 @@ camera_t::camera_t(const camera_t &_cam):
 camera_t::~camera_t()
 { }
 
+camera_t::camera_t(Vector3f eye, Vector3f lookat, Vector3f vup, float vfov, float aspect, float aperture, float focus_dist) {
+    std::cout << "initializing camera..\n";
+
+    lens_radius = aperture / 2;
+    float theta = vfov * M_PI / 180.0;
+    float half_height = tan(theta / 2.0);
+    float half_width = aspect * half_height;
+
+    w = (eye - lookat).normalized();
+    u = vup.cross(w).normalized();
+    v = w.cross(u);
+
+    lower_left_corner = eye - half_width*focus_dist*u - half_height*focus_dist*v - focus_dist*w;
+    horizontal = 2 * half_width * focus_dist * u;
+    vertical = 2 * half_height * focus_dist * v;
+    origin = eye;
+}
+
 const Vector3f camera_t::get_lookat(void) {return lookat;}
 const Vector3f camera_t::get_eye(void) {return eye;}
 const Vector3f camera_t::get_up(void) {return up;}
@@ -101,6 +119,11 @@ color_t camera_t::sample_ray(ray_t &ray, const Vector2f& _pixelpos) const
     return color_t(1.0);
 }
 
+ray_t camera_t::get_ray(float s, float t) const {
+    ray_t primary_ray(origin, lower_left_corner + s*horizontal + t*vertical - origin);
+    return primary_ray;
+}
+
 void camera_t::print(std::ostream &stream)
 {
 	IOFormat CommaInitFmt(StreamPrecision, DontAlignCols, ", ", ", ", "", "", "[ ", " ]");
@@ -112,4 +135,12 @@ void camera_t::print(std::ostream &stream)
 	stream<<"FoV: "<<fov<<std::endl;
 	stream<<"Near:"<<near<<std::endl;
 	stream<<"Far:"<<far<<std::endl<<std::endl;
+
+    stream << "u: " << u.format(CommaInitFmt) << "\n";
+    stream << "v: " << v.format(CommaInitFmt) << "\n";
+    stream << "w: " << w.format(CommaInitFmt) << "\n";
+    stream << "origin: " << origin.format(CommaInitFmt) << "\n";
+    stream << "lower_left_corner: " << lower_left_corner.format(CommaInitFmt) << "\n";
+    stream << "horizontal: " << horizontal.format(CommaInitFmt) << "\n";
+    stream << "vertical: " << vertical.format(CommaInitFmt) << "\n";
 }
