@@ -47,7 +47,7 @@ color_t point_light_t::direct(const Vector3f& hitpt, const ray_t &view_ray, cons
 		shade *= attenuation;
 	}
 
-	return shade.array() * col.array() * ka;
+	return shade.array() * col.array();
 }
 
 

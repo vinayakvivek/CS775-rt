@@ -45,10 +45,12 @@ namespace rt
 		/// This may or may not be used by the implementing class
 		int depth;
 
+    int nspp;
+
 		/// Constructor
-		integrator_t():depth(1) { }
+		integrator_t():depth(1), nspp(10) { }
 		/// Constructor
-		integrator_t(int _d):depth(_d) { }
+		integrator_t(int _d, int _nspp):depth(_d), nspp(_nspp) { }
 		/// Destructor
 		virtual ~integrator_t() { }
 
@@ -64,12 +66,13 @@ namespace rt
 	 **/
 	class whitted_integrator_t : public integrator_t
 	{
+
 	public:
 
 		/// Constructor
 		whitted_integrator_t() { }
 		/// Constructor
-		whitted_integrator_t(int _d):integrator_t(_d) { }
+		whitted_integrator_t(int _d, int _nspp):integrator_t(_d, _nspp) { }
 		/// Destructor
 		virtual ~whitted_integrator_t() { }
 

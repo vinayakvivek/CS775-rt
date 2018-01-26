@@ -33,6 +33,7 @@ color_t whitted_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 	std::vector<object_t*>::const_iterator oit;
 	hit_t hit, minhit;
 	Eigen::Vector3f hitpt, normal;
+	color_t ambient_color(0.05, 0.05, 0.05);
 
 	for (oit=_scn->objs.begin(); oit!=_scn->objs.end(); oit++) {
 		if ((*oit)->intersect(hit, _ray)) {
@@ -80,7 +81,7 @@ color_t whitted_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 	      cosine = -cosine;
 	    }
 
-			if (erand48() > schlick(cosine, eta) && refract(_ray, normal, ni_over_nt, scattered_ray)) {
+			if (erand48() > schlick(fabs(cosine), eta) && refract(_ray, normal, ni_over_nt, scattered_ray)) {
 				// refract
 				d_col += minhit.first->get_material()->get_transmit() * _scn->intg->radiance(_scn, scattered_ray, d + 1);
 			} else {
@@ -93,6 +94,8 @@ color_t whitted_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 			// reflection only
 			reflect(_ray, normal, scattered_ray);
 			d_col += minhit.first->get_material()->get_reflect() * _scn->intg->radiance(_scn, scattered_ray, d + 1);
+		} else {
+			d_col += minhit.first->get_material()->get_diffuse() * ambient_color;
 		}
 	}
 

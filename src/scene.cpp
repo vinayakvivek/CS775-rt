@@ -366,5 +366,6 @@ integrator_t* scene_t::parse_integrator(XMLElement* _elm)
 integrator_t* scene_t::parse_whitted_integrator(XMLElement *_elm)
 {
 	return (integrator_t*)(new whitted_integrator_t(
-								parse_int(_elm, "depth-of-recursion")));
+								parse_int(_elm, "depth-of-recursion"),
+								parse_int(_elm, "samples-per-pixel")));
 }

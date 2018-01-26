@@ -11,7 +11,7 @@ void rt::render(const scene_t* scn)
 	unsigned int h=scn->img->get_height();
 
   // scn->cam->print(std::cout);
-  int nspp = 1000;
+  int nspp = scn->intg->nspp;
   float steps = w*h, step = 0;
 
 	for (int j = h-1; j >= 0; --j)

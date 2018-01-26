@@ -126,17 +126,12 @@
         <color color="1.0 1.0 1.0" />
         <ka float="0.4" />
     </pointlight>
-<!--
-    <pointlight>
-        <position vector3="-100.0 200.0 -10.0" />
-        <color color="0.5 1.0 1.0" />
-        <ka float="0.4" />
-    </pointlight> -->
 </lights>
 
 <integrator>
     <whitted>
         <depth-of-recursion int="50" />
+        <samples-per-pixel int="5000" />
     </whitted>
 </integrator>
 
