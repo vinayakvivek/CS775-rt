@@ -102,5 +102,7 @@ color_t whitted_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 
 	// d_col += minhit.first->get_material()->get_diffuse() * 0.1;
 
+	d_col *= minhit.first->get_texture(normal);
+
 	return d_col;
 }

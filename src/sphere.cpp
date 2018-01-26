@@ -3,7 +3,9 @@
 using namespace rt;
 
 sphere_t::sphere_t(material_t* _mat):center(0.0,0.0,0.0),radius(1.0),mat(_mat) { }
-sphere_t::sphere_t(material_t* _mat, Eigen::Vector3f _c, float _r): center(_c), radius(_r), mat(_mat) { }
+sphere_t::sphere_t(material_t* _mat, Eigen::Vector3f _c, float _r): center(_c), radius(_r), mat(_mat) {
+	tex = new texture_t("./textures/globe.bmp");
+}
 
 sphere_t::~sphere_t() { }
 
@@ -38,6 +40,17 @@ Eigen::Vector3f sphere_t::get_normal(Eigen::Vector3f& _p) const
 	normal.normalize();
 
 	return normal;
+}
+
+color_t sphere_t::get_texture(Vector3f &_p) const {
+	Vector3f p = _p.normalized();
+	// float tx1 = atan2(p.x(), p.z()) / (2. * M_PI) + 0.5;
+	float ty1 = asin(p.y()) / M_PI + .5;
+	float tx1 = asin(p.x()) / M_PI + 0.5;
+
+	// std::cout << tx1 << " " << ty1 << "\n";
+
+	return tex->get_color(tx1, ty1);
 }
 
 material_t* sphere_t::get_material(void) const
