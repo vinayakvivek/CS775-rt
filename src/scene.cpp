@@ -2,7 +2,7 @@
 
 using namespace rt;
 
-std::string scene_t::parse_property(XMLElement* _elm, std::string _property, std::string _type) 
+std::string scene_t::parse_property(XMLElement* _elm, std::string _property, std::string _type)
 {
 	XMLElement* subelm = _elm->FirstChildElement(_property.c_str());
 	if (!subelm)
@@ -10,7 +10,7 @@ std::string scene_t::parse_property(XMLElement* _elm, std::string _property, std
 	return parse_parameter(subelm, _type);
 }
 
-std::string scene_t::parse_parameter(XMLElement* _elm, std::string _type) 
+std::string scene_t::parse_parameter(XMLElement* _elm, std::string _type)
 {
 	const char *value = _elm->Attribute(_type.c_str());
 	if (!value)
@@ -18,26 +18,26 @@ std::string scene_t::parse_parameter(XMLElement* _elm, std::string _type)
 	return std::string(value);
 }
 
-material_t* scene_t::find_material(std::string name, const std::list<material_t*> matlist) 
+material_t* scene_t::find_material(std::string name, const std::list<material_t*> matlist)
 {
 	std::list<material_t*>::const_iterator it;
 	for (it = matlist.begin(); it != matlist.end(); it++)
 	{
 		if((*it)->get_name() == name) return (*it);
 	}
-	
+
 	throw std::invalid_argument("Material from object not found in scene file.");
 }
 
 
 int scene_t::parse_int(XMLElement* _elm, std::string property)
 {
-	return parse_bool(parse_property(_elm, property, "int"));
+	return parse_int(parse_property(_elm, property, "int"));
 }
 
 int scene_t::parse_int(XMLElement* _elm)
 {
-	return parse_float(parse_parameter(_elm, "int"));
+	return parse_int(parse_parameter(_elm, "int"));
 }
 
 int scene_t::parse_int(std::string _val)
@@ -50,17 +50,17 @@ int scene_t::parse_int(std::string _val)
 	return val;
 }
 
-float scene_t::parse_float(XMLElement* _elm, std::string property) 
+float scene_t::parse_float(XMLElement* _elm, std::string property)
 {
 	return parse_float(parse_property(_elm, property, "float"));
 }
 
-float scene_t::parse_float(XMLElement* _elm) 
+float scene_t::parse_float(XMLElement* _elm)
 {
 	return parse_float(parse_parameter(_elm, "float"));
 }
 
-float scene_t::parse_float(std::string _val) 
+float scene_t::parse_float(std::string _val)
 {
 	std::istringstream stream(_val);
 
@@ -70,40 +70,35 @@ float scene_t::parse_float(std::string _val)
 	return val;
 }
 
-bool scene_t::parse_bool(XMLElement* _elm, std::string property) 
+bool scene_t::parse_bool(XMLElement* _elm, std::string property)
 {
 	return parse_bool(parse_property(_elm, property, "bool"));
 }
 
-bool scene_t::parse_bool(XMLElement* _elm) 
+bool scene_t::parse_bool(XMLElement* _elm)
 {
 	return parse_float(parse_parameter(_elm, "bool"));
 }
 
-bool scene_t::parse_bool(std::string _val) 
+bool scene_t::parse_bool(std::string _val)
 {
-	std::istringstream stream(_val);
-
-	bool val;
-	stream >> val;
-
-	return val;
+	return (_val == "true");
 }
 
 
-float scene_t::parse_angle(XMLElement* _elm, std::string _property) 
+float scene_t::parse_angle(XMLElement* _elm, std::string _property)
 {
 	return parse_angle(parse_property(_elm, _property, "angle"));
 }
 
-float scene_t::parse_angle(XMLElement* _elm) 
+float scene_t::parse_angle(XMLElement* _elm)
 {
 	return parse_angle(parse_parameter(_elm, "angle"));
 }
 
-float scene_t::parse_angle(std::string _val) 
+float scene_t::parse_angle(std::string _val)
 {
-	std::istringstream stream(_val);	
+	std::istringstream stream(_val);
 
 	float val;
 	std::string unit;
@@ -117,17 +112,17 @@ float scene_t::parse_angle(std::string _val)
 	return val;
 }
 
-color_t scene_t::parse_color(XMLElement* _elm, std::string _property) 
+color_t scene_t::parse_color(XMLElement* _elm, std::string _property)
 {
 	return parse_color(parse_property(_elm, _property, "color"));
 }
 
-color_t scene_t::parse_color(XMLElement* _elm) 
+color_t scene_t::parse_color(XMLElement* _elm)
 {
 	return parse_color(parse_parameter(_elm, "color"));
 }
 
-color_t scene_t::parse_color(std::string _val) 
+color_t scene_t::parse_color(std::string _val)
 {
 	std::istringstream stream(_val);
 
@@ -139,17 +134,17 @@ color_t scene_t::parse_color(std::string _val)
 	return res;
 }
 
-Eigen::Vector3f scene_t::parse_vector3(XMLElement* _elm, std::string _property) 
+Eigen::Vector3f scene_t::parse_vector3(XMLElement* _elm, std::string _property)
 {
 	return parse_vector3(parse_property(_elm, _property, "vector3"));
 }
 
-Eigen::Vector3f scene_t::parse_vector3(XMLElement* _elm) 
+Eigen::Vector3f scene_t::parse_vector3(XMLElement* _elm)
 {
 	return parse_vector3(parse_parameter(_elm, "vector3"));
 }
 
-Eigen::Vector3f scene_t::parse_vector3(std::string _val) 
+Eigen::Vector3f scene_t::parse_vector3(std::string _val)
 {
 	std::istringstream stream(_val);
 
@@ -212,7 +207,7 @@ bool scene_t::parse_scenefile(void)
 
 }
 
-camera_t* scene_t::parse_camera(XMLElement* _elm) 
+camera_t* scene_t::parse_camera(XMLElement* _elm)
 {
 	XMLElement* elm_camera = _elm->FirstChildElement("camera");
 	if (!elm_camera)
@@ -251,18 +246,18 @@ int scene_t::parse_objects(XMLElement* _elm, const std::list<material_t*>& matli
 
 	if (objs.empty())
 		throw std::invalid_argument("Could not parse object.");
-	else 
+	else
 		return numobj;
 }
 
-object_t* scene_t::parse_object_sphere(XMLElement* _elm, const std::list<material_t*>& matlist) 
+object_t* scene_t::parse_object_sphere(XMLElement* _elm, const std::list<material_t*>& matlist)
 {
 	return (object_t*)(new sphere_t(find_material(parse_parameter(_elm, "material"),	matlist),
 									parse_vector3(_elm,  "center"),
 									parse_float(_elm, "radius")));
 }
 
-int scene_t::parse_materials(XMLElement* _elm) 
+int scene_t::parse_materials(XMLElement* _elm)
 {
 	mats.clear();
 
@@ -272,11 +267,11 @@ int scene_t::parse_materials(XMLElement* _elm)
 
 	int nummat=1;
 	XMLElement* elm_child = elm_mat->FirstChildElement();
-	while (elm_child) 
+	while (elm_child)
 	{
-		
+
 		mats.push_back(parse_simplemat(elm_child));
-		
+
 		elm_child = elm_child->NextSiblingElement();
 
 		nummat++;
@@ -285,7 +280,7 @@ int scene_t::parse_materials(XMLElement* _elm)
 	return nummat;
 }
 
-material_t* scene_t::parse_simplemat(XMLElement* _elm) 
+material_t* scene_t::parse_simplemat(XMLElement* _elm)
 {
 	return (material_t*)(new simplemat_t(
 			parse_parameter(_elm, "id"),
@@ -307,14 +302,14 @@ image_t* scene_t::parse_image(XMLElement* _elm)
 		throw std::runtime_error("No image found in scene file.");
 
 	color_t bgc = parse_color(elm_img, "bgcolor");
-	return new image_t(	
+	return new image_t(
 					parse_float(elm_img, "width"),
 					parse_float(elm_img, "height"),
 					bgc);
 
 }
 
-int scene_t::parse_lights(XMLElement* _elm) 
+int scene_t::parse_lights(XMLElement* _elm)
 {
 	lits.clear();
 
@@ -324,7 +319,7 @@ int scene_t::parse_lights(XMLElement* _elm)
 
 	int numlit=1;
 	XMLElement* elm_child = elm_lit->FirstChildElement();
-	while (elm_child) 
+	while (elm_child)
 	{
 		std::string name(elm_child->Name());
 
@@ -332,7 +327,7 @@ int scene_t::parse_lights(XMLElement* _elm)
 			lits.push_back(parse_pointlight(elm_child));
 		else
 			throw std::invalid_argument("Invalid light in scene file.");
-		
+
 		elm_child = elm_child->NextSiblingElement();
 
 		numlit++;
@@ -341,7 +336,7 @@ int scene_t::parse_lights(XMLElement* _elm)
 	return numlit;
 }
 
-light_t* scene_t::parse_pointlight(XMLElement* _elm) 
+light_t* scene_t::parse_pointlight(XMLElement* _elm)
 {
 	return (light_t*)(new point_light_t(
 			parse_vector3(_elm, "position"),
@@ -364,8 +359,8 @@ integrator_t* scene_t::parse_integrator(XMLElement* _elm)
 	}
 	else
 		throw std::invalid_argument("Invalid integrator in scene file.");
-	
-		
+
+
 }
 
 integrator_t* scene_t::parse_whitted_integrator(XMLElement *_elm)

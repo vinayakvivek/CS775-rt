@@ -30,9 +30,9 @@ using namespace rt;
  * The image2cam transformation is similar to the modeling-viewing pipeline transformation that opengl
  * does to get from the VCS to the CCS.
  *
- * The cam2world transformation is set to identity by default. This is the WCS to VCS transform. 
+ * The cam2world transformation is set to identity by default. This is the WCS to VCS transform.
  *
- * Must ensure that this is called at least once with valid parameters, before the camera can 
+ * Must ensure that this is called at least once with valid parameters, before the camera can
  * act as a producer of primary rays.
 */
 void camera_t::init(void)
@@ -47,9 +47,9 @@ void camera_t::init(void)
         0,   0,  far * recip, -near * far * recip,
         0,   0,   1,   0;
 
-	
-    
-    image2cam = transform_t( 
+
+
+    image2cam = transform_t(
         Eigen::DiagonalMatrix<float, 3>(Vector3f(-0.5f, -0.5f * aspect, 1.0f)) *
         Eigen::Translation<float, 3>(-1.0f, -1.0f/aspect, 0.0f) * perspective).inverse();
 
@@ -68,7 +68,7 @@ camera_t::camera_t()
 
 	init();
 }
-		
+
 camera_t::camera_t(const Vector3f _lat, const Vector3f _eye, const Vector3f _up, float _fov, float _near, float _far):
 	lookat(_lat), eye(_eye), up(_up), fov(_fov), near(_near), far(_far)
 { aspect=640.0f/480.0f; init(); }
@@ -98,13 +98,13 @@ color_t camera_t::sample_ray(ray_t &ray, const Vector2f& _pixelpos) const
     ray.mint = near * onebyz;
     ray.maxt = far * onebyz;
 
-    return color_t(1.0); 
+    return color_t(1.0);
 }
 
 void camera_t::print(std::ostream &stream)
 {
 	IOFormat CommaInitFmt(StreamPrecision, DontAlignCols, ", ", ", ", "", "", "[ ", " ]");
-	
+
 	stream<<"Camera Properties: -------------------------------"<<std::endl;
 	stream<<"Lookat: "<<lookat.format(CommaInitFmt)<<std::endl;
 	stream<<"Eye: "<<eye.format(CommaInitFmt)<<std::endl;

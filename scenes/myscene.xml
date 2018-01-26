@@ -10,13 +10,13 @@
 <image>
 	<width float="320" />
 	<height float="240" />
-	<bgcolor color="0.0 0.0 0.0" />	
+	<bgcolor color="0.0 0.0 0.0" />
 </image>
 
 <materials>
 	<simplemat id="diffuse">
 		<diffuse color="0.7 0.2 0.2" />
-		<specular color="0.0 0.0 0.0" />	
+		<specular color="0.0 0.0 0.0" />
 		<reflect color="0.0 0.0 0.0" />
 		<transmit color="0.0 0.0 0.0" />
 		<eta float="0.0"/>
@@ -33,7 +33,7 @@
 		<n float="100" />
 		<isreflect bool="true"/>
 		<istransmit bool="true"/>
-	</simplemat>	
+	</simplemat>
 </materials>
 
 <objects>
