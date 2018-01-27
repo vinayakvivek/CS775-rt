@@ -26,11 +26,11 @@
     </simplemat>
     <simplemat id="diffuse-red">
         <diffuse color=".75 .25 .25" />
-        <specular color="0.0 0.0 0.0" />
+        <specular color="0.5 0.5 0.5" />
         <reflect color="0.0 0.0 0.0" />
         <transmit color="0.0 0.0 0.0" />
         <eta float="0.0"/>
-        <n float="0"/>
+        <n float="10"/>
         <isreflect bool="false"/>
         <istransmit bool="false"/>
     </simplemat>
@@ -38,7 +38,7 @@
     <simplemat id="metal">
         <diffuse color="0.5 0.5 0.5" />
         <specular color="0.8 0.8 0.8" />
-        <reflect color="1.0 1.0 1.0" />
+        <reflect color="0.5 0.5 0.5" />
         <transmit color="0.0 0.0 0.0" />
         <eta float="0.0"/>
         <n float="10" />
@@ -59,19 +59,19 @@
 </materials>
 
 <objects>
+    <sphere material="metal">
+        <center vector3="-0.5 0.0 -3.0" />
+        <radius float="0.5" />
+        <texture string="./textures/iu.bmp" />
+    </sphere>
+
     <mesh material="diffuse-red">
-        <center vector3="0.5 0.0 -2.0" />
+        <center vector3="0.5 0.5 -1.0" />
         <objfile string="./objs/cube.obj" />
     </mesh>
 
-    <!-- <sphere material="diffuse-red">
-        <center vector3="0.8 0.3 -1.0" />
-        <radius float="0.3" />
-        <texture string="" />
-    </sphere>
- -->
     <sphere material="diffuse-white">
-        <center vector3="0.0 -1002.5 0.0" />
+        <center vector3="0.0 -1000.5 0.0" />
         <radius float="1000" />
         <texture string="" />
     </sphere>
@@ -87,8 +87,8 @@
 
 <integrator>
     <whitted>
-        <depth-of-recursion int="10" />
-        <samples-per-pixel int="1" />
+        <depth-of-recursion int="50" />
+        <samples-per-pixel int="10" />
     </whitted>
 </integrator>
 

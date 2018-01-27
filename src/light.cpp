@@ -14,9 +14,11 @@ point_light_t::~point_light_t()
 
 color_t point_light_t::direct(const Vector3f& hitpt, const ray_t &view_ray, const Vector3f& normal, const material_t* mat, const scene_t* scn) const
 {
-	Vector3f eps_hitpt = hitpt;
-	Vector3f direction = pos - eps_hitpt;
-	ray_t shadow_ray(eps_hitpt, direction, EPSILON, 1.0 + EPSILON);
+
+	Vector3f eps_hitpt = hitpt + EPSILON * normal;
+	Vector3f direction = (pos - eps_hitpt).normalized();
+	ray_t shadow_ray(eps_hitpt, direction);
+	shadow_ray.maxt = (pos - eps_hitpt).norm();
 
 	color_t shade(0.0, 0.0, 0.0);
 
@@ -34,12 +36,12 @@ color_t point_light_t::direct(const Vector3f& hitpt, const ray_t &view_ray, cons
 	}
 
 	if (!found_intersection && !mat->get_is_transmit()) {
-		// std::cout << "sqdist: " << direction.squaredNorm() << "\n";
+
 		float d = direction.norm();
-		float cos = normal.dot(direction.normalized());
+		float cos = normal.dot(direction);
 		float attenuation = fmin(1, 1.0 / (0.1 + 0.00001 * d + 0.00001 * d*d));
 
-		Vector3f h = (-view_ray.direction.normalized() + direction.normalized()).normalized();
+		Vector3f h = (-view_ray.direction + direction).normalized();
 
 		shade = mat->get_diffuse() * fmax(0.0, cos) +
 					  mat->get_specular() * pow(normal.dot(h), mat->get_shininess());

@@ -135,6 +135,12 @@ mesh_t::mesh_t(material_t* _mat, std::string file_name, Vector3f center) {
     0.48, 0.64, 0.60, 0.0,
     0.0, 0.0, 0.0, 1.0;
 
+  Matrix3f m;
+  m = AngleAxisf(0, Vector3f::UnitZ()) *
+      AngleAxisf(60, Vector3f::UnitY()) *
+      AngleAxisf(0, Vector3f::UnitZ());
+  rot_matrix.topLeftCorner<3,3>() = m;
+
 
   // trans_matrix = Translation<float,3>(center);
 
@@ -149,6 +155,8 @@ mesh_t::mesh_t(material_t* _mat, std::string file_name, Vector3f center) {
   this->center = center;
   mat = _mat;
 
+  std::vector<Vector3f> face;
+
   // Loop over shapes
   for (size_t s = 0; s < shapes.size(); s++) {
     // Loop over faces(polygon)
@@ -156,7 +164,7 @@ mesh_t::mesh_t(material_t* _mat, std::string file_name, Vector3f center) {
     for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
 
       int fv = shapes[s].mesh.num_face_vertices[f];
-      std::vector<Vector3f> face;
+      face.resize(0);
 
       // Loop over vertices in the face.
       for (size_t v = 0; v < fv; v++) {
@@ -192,14 +200,16 @@ bool mesh_t::intersect(hit_t& result, const ray_t& _ray) const {
   float curr_t = _ray.maxt;
   Vector3f curr_normal;
   float t, u, v;
+  Vector3f a, b;
 
   bool found_intersection = false;
 
   for (triangle_t tri : triangles) {
     if (rayTriangleIntersect(_ray, tri.A, tri.B, tri.C, t, u, v)) {
-      if (t < curr_t) {
+      if (t < curr_t && t > _ray.mint) {
         curr_t = t;
         curr_normal = tri.N;
+        a = tri.A; b = tri.B;
         found_intersection = true;
       }
     }

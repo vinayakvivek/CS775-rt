@@ -24,14 +24,14 @@ bool sphere_t::intersect(hit_t& result, const ray_t& _ray) const
 		if (temp < _ray.maxt && temp > _ray.mint) {
 			result.obj = this;
 			result.t = temp;
-			result.normal = (_ray(temp) - center).normalized();
+			result.normal = (_ray(temp) - center) / radius;
 			return true;
 		}
 		temp = (-_b + sqr_d) / a;
 		if (temp < _ray.maxt && temp > _ray.mint) {
 			result.obj = this;
 			result.t = temp;
-			result.normal = (_ray(temp) - center).normalized();
+			result.normal = (_ray(temp) - center) / radius;
 			return true;
 		}
 		return false;
