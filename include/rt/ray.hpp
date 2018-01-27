@@ -56,6 +56,6 @@ namespace rt
 		virtual ~ray_t();
 
 		/// Returns a point along the ray at _t
-		const Vector3f operator()(const float _t);
+		const Vector3f operator()(const float _t) const;
 	};
 }
