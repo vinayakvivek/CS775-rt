@@ -32,8 +32,9 @@ void rt::render(const scene_t* scn)
 
 			scn->img->set_pixel(i, j, col);
 		}
-
 	}
+
+  std::cout << "\n";
 }
 
 int main(int argc, char **argv)

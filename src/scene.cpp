@@ -237,6 +237,8 @@ int scene_t::parse_objects(XMLElement* _elm, const std::list<material_t*>& matli
 
 		if (name == "sphere")
 			objs.push_back(parse_object_sphere(elm_child, matlist));
+		else if (name == "mesh")
+			objs.push_back(parse_object_mesh(elm_child, matlist));
 		else
 			throw std::invalid_argument("Invalid object in scene file.");
 
@@ -252,9 +254,27 @@ int scene_t::parse_objects(XMLElement* _elm, const std::list<material_t*>& matli
 
 object_t* scene_t::parse_object_sphere(XMLElement* _elm, const std::list<material_t*>& matlist)
 {
-	return (object_t*)(new sphere_t(find_material(parse_parameter(_elm, "material"),	matlist),
-									parse_vector3(_elm,  "center"),
-									parse_float(_elm, "radius")));
+	XMLElement* subelm = _elm->FirstChildElement("texture");
+	std::string texture_file = "";
+	if (subelm)
+		texture_file = parse_parameter(subelm, "string");
+
+	return (object_t*)(new sphere_t(
+											find_material(parse_parameter(_elm, "material"),	matlist),
+											parse_vector3(_elm,  "center"),
+											parse_float(_elm, "radius"),
+											texture_file
+										));
+}
+
+object_t* scene_t::parse_object_mesh(XMLElement* _elm, const std::list<material_t*>& matlist) {
+	return (object_t*)(new mesh_t(
+											find_material(parse_parameter(_elm, "material"),	matlist),
+											parse_property(_elm, "objfile", "string"),
+											parse_vector3(_elm,  "center"),
+											parse_vector3(_elm,  "scale"),
+											parse_vector3(_elm,  "rotation")
+										));
 }
 
 int scene_t::parse_materials(XMLElement* _elm)

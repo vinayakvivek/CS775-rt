@@ -28,12 +28,13 @@ GLFWLIB = -lglfw
 EIGEN_INCLUDE=/usr/local/include/eigen3
 TINYXML2_INCLUDE=$(EXTDIR)/tinyxml2
 FILESYSTEM_INCLUDE=$(EXTDIR)/filesystem
+TINYOBJLOADER_INCLUDE=$(EXTDIR)/tinyobjloader
 EXTMODULES=$(EXTDIR)/tinyxml2
 
 # Compiler and Linker flags
-LDFLAGS=-L/usr/local/lib 
+LDFLAGS=-L/usr/local/lib
 
-CPPFLAGS=-I$(EIGEN_INCLUDE) -I$(TINYXML2_INCLUDE) -I$(FILESYSTEM_INCLUDE) -I$(INCDIR) 
+CPPFLAGS=-I$(EIGEN_INCLUDE) -I$(TINYXML2_INCLUDE) -I$(FILESYSTEM_INCLUDE) -I$(TINYOBJLOADER_INCLUDE) -I$(INCDIR)
 CPPFLAGS+=-O3 -Wall -std=c++11
 
 ######################################

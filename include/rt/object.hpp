@@ -33,7 +33,20 @@ namespace rt
 	class object_t;
 
 	/// Convenience typedef to reprent a hit (intersection) point
-	typedef std::pair<const object_t*, float> hit_t; 
+	// typedef std::pair<const object_t*, float> hit_t;
+
+  struct hit_t {
+    const object_t *obj;
+    float t;
+    Vector3f normal;
+
+    hit_t() {}
+    hit_t(const object_t *o, float _t, Vector3f _n) {
+      obj = o;
+      t = _t;
+      normal = _n;
+    }
+  };
 
 	/**
 	 * \brief This is an abstract base class to represent objects in rt.
@@ -51,7 +64,7 @@ namespace rt
 		virtual std::string get_name(void) const = 0;
 
 		/**
-		* Returns true if the _ray hits this object. The hit information is returned in result. 
+		* Returns true if the _ray hits this object. The hit information is returned in result.
 		* This is not valid if there is no intersection and the function returns false.
 		**/
 		virtual bool intersect(hit_t& result, const ray_t& _ray) const = 0;
@@ -59,8 +72,11 @@ namespace rt
 		/// Returns the normal to the surface at point _p.
 		virtual Vector3f get_normal(Vector3f& _p) const = 0;
 
+    /// Returns the texture color at the point surface _p.
+    virtual color_t get_texture(Vector3f &_p) const = 0;
+
 		/// Returns the material for the object.
-		virtual material_t* get_material(void) const = 0; 
+		virtual material_t* get_material(void) const = 0;
 
 		/// Prints information about the object to stream.
 		virtual void print(std::ostream &stream) const = 0;

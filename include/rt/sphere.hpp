@@ -27,7 +27,7 @@
 #include <object.hpp>
 #include <ray.hpp>
 #include <utils.hpp>
-
+#include <texture.hpp>
 
 namespace rt
 {
@@ -46,11 +46,13 @@ namespace rt
 		/// Sphere material
 		material_t* mat;
 
+    texture_t* tex;
+
 	public:
 		/// Constructor
 		sphere_t(material_t* _mat);
 		/// Constructor
-		sphere_t(material_t* _mat, Eigen::Vector3f _c, float _r);
+		sphere_t(material_t* _mat, Eigen::Vector3f _c, float _r, std::string texture_file);
 		/// Destuctor
 		virtual ~sphere_t();
 
@@ -58,13 +60,15 @@ namespace rt
 		std::string get_name(void) const { return std::string("sphere"); }
 
 		/**
-		* Returns true if the _ray hits this object. The hit information is returned in result. 
+		* Returns true if the _ray hits this object. The hit information is returned in result.
 		* This is not valid if there is no intersection and the function returns false.
 		**/
 		bool intersect(hit_t& result, const ray_t& _ray) const;
 
 		/// Returns the normal to the surface at point _p.
 		Eigen::Vector3f get_normal(Eigen::Vector3f& _p) const;
+
+    color_t get_texture(Vector3f &_p) const;
 
 		/// Returns the material for the sphere.
 		material_t* get_material(void) const;
