@@ -1,7 +1,7 @@
 <rt-scene>
 
 <camera>
-    <eye    vector3="0.0 0.5 3.0" />
+    <eye    vector3="0.0 0.5 5.0" />
     <lookat vector3="0.0 0.5 0.0" />
     <up     vector3="0.0 -1.0 0.0" />
     <fov    angle="50 deg" />
@@ -59,16 +59,22 @@
 </materials>
 
 <objects>
-    <mesh material="metal">
-        <center vector3="0.0 0.0 0.0" />
+    <mesh material="diffuse-red">
+        <center vector3="0.5 0.0 -2.0" />
         <objfile string="./objs/cube.obj" />
     </mesh>
 
-    <!-- <sphere material="diffuse-white">
-        <center vector3="0.0 -1000.5 0.0" />
+    <!-- <sphere material="diffuse-red">
+        <center vector3="0.8 0.3 -1.0" />
+        <radius float="0.3" />
+        <texture string="" />
+    </sphere>
+ -->
+    <sphere material="diffuse-white">
+        <center vector3="0.0 -1002.5 0.0" />
         <radius float="1000" />
         <texture string="" />
-    </sphere> -->
+    </sphere>
 </objects>
 
 <lights>
@@ -81,8 +87,8 @@
 
 <integrator>
     <whitted>
-        <depth-of-recursion int="50" />
-        <samples-per-pixel int="10" />
+        <depth-of-recursion int="10" />
+        <samples-per-pixel int="1" />
     </whitted>
 </integrator>
 

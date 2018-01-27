@@ -5,8 +5,8 @@
 using namespace rt;
 
 void reflect(const ray_t &incident_ray, const Vector3f &N, ray_t &reflected_ray) {
-	Vector3f I = incident_ray.direction.normalized();
-	reflected_ray.direction = I - 2.0 * N.dot(I) * N;
+	Vector3f I = incident_ray.direction;
+	reflected_ray.direction = (I - 2.0 * N.dot(I) * N).normalized();
 }
 
 // return: false ==> total internal reflection
@@ -15,7 +15,7 @@ bool refract(const ray_t &incident_ray, const Vector3f &N, float eta, ray_t &ref
   float dt = I.dot(N);
   float discriminant = 1.0 - eta*eta*(1 - dt*dt);
   if (discriminant > 0) {
-    refracted_ray.direction = eta * (I - N*dt) - N*sqrt(discriminant);
+    refracted_ray.direction = (eta * (I - N*dt) - N*sqrt(discriminant)).normalized();
     return true;
   }
   return false;

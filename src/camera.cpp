@@ -120,7 +120,7 @@ color_t camera_t::sample_ray(ray_t &ray, const Vector2f& _pixelpos) const
 }
 
 ray_t camera_t::get_ray(float s, float t) const {
-    ray_t primary_ray(origin, lower_left_corner + s*horizontal + t*vertical - origin);
+    ray_t primary_ray(origin, (lower_left_corner + s*horizontal + t*vertical - origin).normalized());
     return primary_ray;
 }
 
