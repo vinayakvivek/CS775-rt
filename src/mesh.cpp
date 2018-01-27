@@ -96,7 +96,9 @@ bool rayTriangleIntersect(
     // return true; // this ray hits the triangle
 }
 
-mesh_t::mesh_t(material_t* _mat, std::string file_name, Vector3f center) {
+mesh_t::mesh_t(material_t* _mat, std::string file_name, Vector3f _center,
+      Vector3f _scale, Vector3f _rot) {
+
   std::cout << file_name << "\n";
 
   tinyobj::attrib_t attrib;
@@ -120,14 +122,14 @@ mesh_t::mesh_t(material_t* _mat, std::string file_name, Vector3f center) {
   float scale = 1.0;
   Matrix4f scale_matrix, trans_matrix, rot_matrix;
   scale_matrix <<
-    scale, 0.0, 0.0, 0.0,
-    0.0, scale, 0.0, 0.0,
-    0.0, 0.0, scale, 0.0,
+    _scale.x(), 0.0, 0.0, 0.0,
+    0.0, _scale.y(), 0.0, 0.0,
+    0.0, 0.0, _scale.z(), 0.0,
     0.0, 0.0, 0.0, 1.0;
   trans_matrix <<
-    1.0, 0.0, 0.0, center.x(),
-    0.0, 1.0, 0.0, center.y(),
-    0.0, 0.0, 1.0, center.z(),
+    1.0, 0.0, 0.0, _center.x(),
+    0.0, 1.0, 0.0, _center.y(),
+    0.0, 0.0, 1.0, _center.z(),
     0.0, 0.0, 0.0, 1.0;
   rot_matrix <<
     0.36, 0.48, -0.8, 0.0,
@@ -136,23 +138,15 @@ mesh_t::mesh_t(material_t* _mat, std::string file_name, Vector3f center) {
     0.0, 0.0, 0.0, 1.0;
 
   Matrix3f m;
-  m = AngleAxisf(0, Vector3f::UnitZ()) *
-      AngleAxisf(60, Vector3f::UnitY()) *
-      AngleAxisf(0, Vector3f::UnitZ());
+  m = AngleAxisf(_rot.z(), Vector3f::UnitZ()) *
+      AngleAxisf(_rot.y(), Vector3f::UnitY()) *
+      AngleAxisf(_rot.x(), Vector3f::UnitZ());
   rot_matrix.topLeftCorner<3,3>() = m;
-
-
-  // trans_matrix = Translation<float,3>(center);
-
-  IOFormat CommaInitFmt(StreamPrecision, DontAlignCols, ", ", ", ", "", "", "[ ", " ]");
-  std::cout << center.format(CommaInitFmt) << "\n";
-  // std::cout << Translation<float,3>(center).format(CommaInitFmt) << "\n";
-  std::cout << (scale_matrix * trans_matrix).format(CommaInitFmt) << "\n";
 
 
   transform = transform_t(trans_matrix * scale_matrix * rot_matrix);
   num_triangles = 0;
-  this->center = center;
+  this->center = _center;
   mat = _mat;
 
   std::vector<Vector3f> face;

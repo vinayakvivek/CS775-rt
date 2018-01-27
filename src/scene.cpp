@@ -271,7 +271,9 @@ object_t* scene_t::parse_object_mesh(XMLElement* _elm, const std::list<material_
 	return (object_t*)(new mesh_t(
 											find_material(parse_parameter(_elm, "material"),	matlist),
 											parse_property(_elm, "objfile", "string"),
-											parse_vector3(_elm,  "center")
+											parse_vector3(_elm,  "center"),
+											parse_vector3(_elm,  "scale"),
+											parse_vector3(_elm,  "rotation")
 										));
 }
 

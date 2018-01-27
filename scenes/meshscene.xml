@@ -68,6 +68,8 @@
     <mesh material="diffuse-red">
         <center vector3="0.5 0.5 -1.0" />
         <objfile string="./objs/cube.obj" />
+        <scale vector3="0.5 0.5 0.5" />
+        <rotation vector3="0.0 60.0 0.0" />
     </mesh>
 
     <sphere material="diffuse-white">
