@@ -1,0 +1,90 @@
+<rt-scene>
+
+<camera>
+    <eye    vector3="0.0 0.5 3.0" />
+    <lookat vector3="0.0 0.5 0.0" />
+    <up     vector3="0.0 -1.0 0.0" />
+    <fov    angle="50 deg" />
+</camera>
+
+<image>
+    <width float="600" />
+    <height float="600" />
+    <bgcolor color="0.25 0.25 0.75" />
+</image>
+
+<materials>
+    <simplemat id="diffuse-white">
+        <diffuse color=".75 .75 .75" />
+        <specular color="0.0 0.0 0.0" />
+        <reflect color="0.0 0.0 0.0" />
+        <transmit color="0.0 0.0 0.0" />
+        <eta float="0.0"/>
+        <n float="0"/>
+        <isreflect bool="false"/>
+        <istransmit bool="false"/>
+    </simplemat>
+    <simplemat id="diffuse-red">
+        <diffuse color=".75 .25 .25" />
+        <specular color="0.0 0.0 0.0" />
+        <reflect color="0.0 0.0 0.0" />
+        <transmit color="0.0 0.0 0.0" />
+        <eta float="0.0"/>
+        <n float="0"/>
+        <isreflect bool="false"/>
+        <istransmit bool="false"/>
+    </simplemat>
+
+    <simplemat id="metal">
+        <diffuse color="0.5 0.5 0.5" />
+        <specular color="0.8 0.8 0.8" />
+        <reflect color="1.0 1.0 1.0" />
+        <transmit color="0.0 0.0 0.0" />
+        <eta float="0.0"/>
+        <n float="10" />
+        <isreflect bool="true"/>
+        <istransmit bool="false"/>
+    </simplemat>
+
+    <simplemat id="glass">
+        <diffuse color="0.5 0.5 0.5" />
+        <specular color="0.1 0.1 0.1" />
+        <reflect color="1.0 1.0 1.0" />
+        <transmit color="1.0 1.0 1.0" />
+        <eta float="1.5"/>
+        <n float="100" />
+        <isreflect bool="true"/>
+        <istransmit bool="true"/>
+    </simplemat>
+</materials>
+
+<objects>
+    <mesh material="metal">
+        <center vector3="0.0 0.0 0.0" />
+        <objfile string="./objs/cube.obj" />
+    </mesh>
+
+    <!-- <sphere material="diffuse-white">
+        <center vector3="0.0 -1000.5 0.0" />
+        <radius float="1000" />
+        <texture string="" />
+    </sphere> -->
+</objects>
+
+<lights>
+    <pointlight>
+        <position vector3="-100.0 500.0 100.0" />
+        <color color="1.0 1.0 1.0" />
+        <ka float="0.4" />
+    </pointlight>
+</lights>
+
+<integrator>
+    <whitted>
+        <depth-of-recursion int="50" />
+        <samples-per-pixel int="10" />
+    </whitted>
+</integrator>
+
+
+</rt-scene>

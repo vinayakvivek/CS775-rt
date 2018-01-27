@@ -22,12 +22,14 @@ bool sphere_t::intersect(hit_t& result, const ray_t& _ray) const
 		float sqr_d = sqrt(discriminant);
 		float temp = (-_b - sqr_d) / a;
 		if (temp < _ray.maxt && temp > _ray.mint) {
-			result = hit_t(this, temp);
+			Vector3f normal = (_ray(temp) - center).normalized();
+			result = hit_t(this, temp, normal);
 			return true;
 		}
 		temp = (-_b + sqr_d) / a;
 		if (temp < _ray.maxt && temp > _ray.mint) {
-			result = hit_t(this, temp);
+			Vector3f normal = (_ray(temp) - center).normalized();
+			result = hit_t(this, temp, normal);
 			return true;
 		}
 		return false;

@@ -32,13 +32,14 @@
 #include <material.hpp>
 #include <object.hpp>
 #include <sphere.hpp>
+#include <mesh.hpp>
 #include <utils.hpp>
 
 using namespace tinyxml2;
 
 namespace rt
 {
- /// Forward Declarations   
+ /// Forward Declarations
  class light_t;
  class integrator_t;
 
@@ -56,12 +57,12 @@ namespace rt
 
     /// Parses an xml property with the name _property and returns the value for an attribute named _type.
     std::string parse_property(XMLElement* _elm, std::string _property, std::string _type);
-    /// Parses an xml attribute named _type and returns its value. 
+    /// Parses an xml attribute named _type and returns its value.
     std::string parse_parameter(XMLElement* _elm, std::string _type);
     /// Returns a pointed to a material called name from the material list. If not found, throws exception.
     material_t* find_material(std::string name, const std::list<material_t*> matlist);
 
-    
+
 
     ///  Parse an int property.
     int parse_int(XMLElement* _elm, std::string property);
@@ -107,7 +108,7 @@ namespace rt
 
 
 
-    /// The top level parser for the scenefile. 
+    /// The top level parser for the scenefile.
     bool parse_scenefile(void);
 
     /// Parse a camera.
@@ -117,6 +118,8 @@ namespace rt
     int parse_objects(XMLElement* _elm, const std::list<material_t*>& matlist);
     /// Parse a sphere object.
     object_t* parse_object_sphere(XMLElement* _elm, const std::list<material_t*>& matlist);
+    /// Parse a obj file
+    object_t* parse_object_mesh(XMLElement* _elm, const std::list<material_t*>& matlist);
 
     /// Parses materials. All materials in the scene must appear in one block. They are all added to a list of materials.
     int parse_materials(XMLElement* _elm);
@@ -175,7 +178,7 @@ namespace rt
         objs.clear();
         mats.clear();
         lits.clear();
- 
+
         delete img;
     }
 

@@ -33,7 +33,20 @@ namespace rt
 	class object_t;
 
 	/// Convenience typedef to reprent a hit (intersection) point
-	typedef std::pair<const object_t*, float> hit_t;
+	// typedef std::pair<const object_t*, float> hit_t;
+
+  struct hit_t {
+    object_t *obj;
+    float t;
+    Vector3f normal;
+
+    hit_t() {obj = NULL;}
+    hit_t(object_t *o, float _t, Vector3f _n) {
+      obj = o;
+      t = _t;
+      normal = _n;
+    }
+  }
 
 	/**
 	 * \brief This is an abstract base class to represent objects in rt.
