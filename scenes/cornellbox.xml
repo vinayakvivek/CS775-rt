@@ -131,7 +131,7 @@
 <integrator>
     <whitted>
         <depth-of-recursion int="50" />
-        <samples-per-pixel int="5000" />
+        <samples-per-pixel int="100" />
     </whitted>
 </integrator>
 
