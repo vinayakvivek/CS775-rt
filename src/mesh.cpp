@@ -119,7 +119,6 @@ mesh_t::mesh_t(material_t* _mat, std::string file_name, Vector3f _center,
 
   std::cout << "loaded successfully.\n";
 
-  float scale = 1.0;
   Matrix4f scale_matrix, trans_matrix, rot_matrix;
   scale_matrix <<
     _scale.x(), 0.0, 0.0, 0.0,

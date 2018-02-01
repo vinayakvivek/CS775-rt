@@ -82,14 +82,21 @@ color_t whitted_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 	      cosine = -cosine;
 	    }
 
-			if (erand48() > schlick(fabs(cosine), eta) && refract(_ray, normal, ni_over_nt, scattered_ray)) {
+	    color_t kr = minhit.obj->get_material()->get_reflect();
+	    color_t kt = minhit.obj->get_material()->get_transmit();
+
+			if (refract(_ray, normal, ni_over_nt, scattered_ray)) {
 				// refract
-				d_col += minhit.obj->get_material()->get_transmit() * _scn->intg->radiance(_scn, scattered_ray, d + 1);
+				d_col += kt * _scn->intg->radiance(_scn, scattered_ray, d + 1);
 			} else {
-				// reflect (or total internal reflection)
-				reflect(_ray, normal, scattered_ray);
-				d_col += minhit.obj->get_material()->get_reflect() * _scn->intg->radiance(_scn, scattered_ray, d + 1);
+				// total internal reflection
+				kr += kt;
 			}
+
+			// reflect
+			reflect(_ray, normal, scattered_ray);
+			d_col += kr * _scn->intg->radiance(_scn, scattered_ray, d + 1);
+
 
 		} else if (can_reflect) {
 			// reflection only
