@@ -102,7 +102,9 @@ color_t whitted_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 			// reflection only
 			reflect(_ray, normal, scattered_ray);
 			d_col += minhit.obj->get_material()->get_reflect() * _scn->intg->radiance(_scn, scattered_ray, d + 1);
+
 		} else {
+
 			d_col += minhit.obj->get_material()->get_diffuse() * ambient_color;
 		}
 	}
