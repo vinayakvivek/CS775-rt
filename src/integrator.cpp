@@ -76,10 +76,8 @@ color_t whitted_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 	    if (cosine > 0) {
 	      normal = -normal;
 	      ni_over_nt = eta;
-	      cosine = eta * cosine;
 	    } else {
 	      ni_over_nt = 1.0 / eta;
-	      cosine = -cosine;
 	    }
 
 	    color_t kr = minhit.obj->get_material()->get_reflect();

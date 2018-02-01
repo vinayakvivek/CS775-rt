@@ -88,7 +88,7 @@
 <integrator>
 	<whitted>
 		<depth-of-recursion int="50" />
-		<samples-per-pixel int="100" />
+		<samples-per-pixel int="10" />
 	</whitted>
 </integrator>
 
