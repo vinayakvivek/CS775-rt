@@ -86,10 +86,10 @@
 </lights>
 
 <integrator>
-	<whitted>
+	<path>
 		<depth-of-recursion int="50" />
 		<samples-per-pixel int="10" />
-	</whitted>
+	</path>
 </integrator>
 
 

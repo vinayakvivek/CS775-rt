@@ -89,4 +89,9 @@ namespace rt
 		/// Prints information about the light to the stream.
 		virtual void print(std::ostream &stream) const;
 	};
+
+	// class area_light_t : public light_t
+	// {
+
+	// }
 }

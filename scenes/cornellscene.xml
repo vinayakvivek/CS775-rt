@@ -68,11 +68,11 @@
 
     <simplemat id="glass">
         <diffuse color="0.5 0.5 0.5" />
-        <specular color="0.1 0.1 0.1" />
+        <specular color="0.5 0.5 0.5" />
         <reflect color="0.1 0.1 0.1" />
         <transmit color="0.9 0.9 0.9" />
         <eta float="1.5"/>
-        <n float="50" />
+        <n float="100" />
         <isreflect bool="true"/>
         <istransmit bool="true"/>
     </simplemat>
@@ -131,7 +131,7 @@
 <integrator>
     <whitted>
         <depth-of-recursion int="50" />
-        <samples-per-pixel int="100" />
+        <samples-per-pixel int="10" />
     </whitted>
 </integrator>
 

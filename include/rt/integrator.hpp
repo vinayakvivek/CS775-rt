@@ -82,4 +82,26 @@ namespace rt
 		/// Returns the radiance estimate along ray _ray, for scene scn, at bounce depth d.
 		virtual color_t radiance(const scene_t* scn, ray_t& _ray, int d) const;
 	};
+
+  /**
+   * \brief This is the monte carlo path integrator.
+   **/
+  class path_integrator_t : public integrator_t
+  {
+
+  public:
+
+    /// Constructor
+    path_integrator_t() { }
+    /// Constructor
+    path_integrator_t(int _d, int _nspp):integrator_t(_d, _nspp) { }
+    /// Destructor
+    virtual ~path_integrator_t() { }
+
+    /// Returns the name of the integrator.
+    virtual std::string get_name(void) const {return "path";}
+
+    /// Returns the radiance estimate along ray _ray, for scene scn, at bounce depth d.
+    virtual color_t radiance(const scene_t* scn, ray_t& _ray, int d) const;
+  };
 }

@@ -113,3 +113,8 @@ color_t whitted_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 
 	return d_col;
 }
+
+color_t path_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) const
+{
+	return color_t(1.0, 0.0, 0.5);
+}

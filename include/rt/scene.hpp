@@ -138,6 +138,8 @@ namespace rt
     integrator_t* parse_integrator(XMLElement* _elm);
     /// Parse a whitted integrator.
     integrator_t* parse_whitted_integrator(XMLElement *_elm);
+    /// Parse a path integrator.
+    integrator_t* parse_path_integrator(XMLElement *_elm);
 
     ///Constructor. Does not do anything. This cannot be used, hence defined as private.
     scene_t() {;}
