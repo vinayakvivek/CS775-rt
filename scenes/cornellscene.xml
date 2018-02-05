@@ -128,8 +128,9 @@
 
 <lights>
     <arealight>
-        <center vector3="0.0 2.0 -2.0" />
-        <radius float="1.0"/>
+        <center vector3="0.0 1.9 -2.6" />
+        <normal vector3="0.0 -1.0 0.0" />
+        <radius vector3="0.0 0.0 0.05" />
         <color color="1.0 1.0 1.0" />
         <ka float="0.4" />
     </arealight>

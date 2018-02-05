@@ -369,7 +369,8 @@ light_t* scene_t::parse_pointlight(XMLElement* _elm)
 light_t* scene_t::parse_arealight(XMLElement* _elm) {
 	return (light_t*)(new area_light_t(
 			parse_vector3(_elm, "center"),
-			parse_float(_elm, "radius"),
+			parse_vector3(_elm, "normal"),
+			parse_vector3(_elm, "radius"),
 			parse_color(_elm, "color"),
 			parse_float(_elm, "ka")));
 }

@@ -69,10 +69,31 @@ void point_light_t::print(std::ostream &stream) const
 	stream<<"Ambient Coefficient: "<<ka<<std::endl<<std::endl;
 }
 
+area_light_t::area_light_t(const Vector3f &_center, const Vector3f _normal, const Vector3f _radius, const Vector3f& _col, float _ka) {
+	center = _center;
+	normal = _normal.normalized();
+	radius = _radius;
+	col = _col;
+	ka = _ka;
+
+  Vector3f w = normal;
+  Vector3f v = radius.normalized();
+  Vector3f u = v.cross(w);
+
+  Matrix4f to_light_coords;
+  to_light_coords <<
+  	u.x(), u.y(), u.z(), -center.dot(u),
+  	v.x(), v.y(), v.z(), -center.dot(v),
+  	w.x(), w.y(), w.z(), -center.dot(w),
+  	0.0,   0.0,   0.0,   1.0;
+
+  transform = transform_t(to_light_coords);
+}
+
 
 Vector3f area_light_t::sample_point() const
 {
-	return (center + radius * randomInUnitDisk());
+	return transform.transform_point(randomInUnitDisk() * radius.norm());
 }
 
 color_t area_light_t::direct(const Vector3f& hitpt, const ray_t &view_ray, const Vector3f& normal, const material_t* mat, const scene_t* scn) const
@@ -120,6 +141,10 @@ color_t area_light_t::direct(const Vector3f& hitpt, const ray_t &view_ray, const
 	total_shade /= num_shadowrays;
 
 	return total_shade.array() * col.array() * ka;
+}
+
+bool area_light_t::intersect(hit_t& result, const ray_t& _ray) const {
+	return false;
 }
 
 void area_light_t::print(std::ostream &stream) const

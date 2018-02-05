@@ -27,6 +27,7 @@
 #include <material.hpp>
 #include <scene.hpp>
 #include <utils.hpp>
+#include <object.hpp>
 
 namespace rt
 {
@@ -56,7 +57,7 @@ namespace rt
 		**/
 		virtual color_t direct(const Vector3f& hitpt, const ray_t &view_ray, const Vector3f& normal, const material_t* mat, const scene_t* scn) const = 0;
 
-		// virtual bool intersect();
+		virtual bool intersect(hit_t& result, const ray_t& _ray) const = 0;
 
 		/// Prints information about the light to the stream.
 		virtual void print(std::ostream &stream) const = 0;
@@ -88,6 +89,10 @@ namespace rt
 		**/
 		virtual color_t direct(const Vector3f& hitpt, const ray_t &view_ray, const Vector3f& normal, const material_t* mat, const scene_t* scn) const;
 
+		virtual bool intersect(hit_t& result, const ray_t& _ray) const {
+			return false;
+		}
+
 		/// Prints information about the light to the stream.
 		virtual void print(std::ostream &stream) const;
 	};
@@ -95,24 +100,23 @@ namespace rt
 	class area_light_t : public light_t
 	{
 			Vector3f center;
-			float radius;
+			Vector3f normal;
+			Vector3f radius;
 
 			Vector3f col;
 			float ka;
 
+			transform_t transform;
+
 		public:
 
-			area_light_t(const Vector3f &_center, float _radius, const Vector3f& _col, float _ka) {
-				center = _center;
-				radius = _radius;
-				col = _col;
-				ka = _ka;
-			}
+			area_light_t(const Vector3f &_center, const Vector3f _normal, const Vector3f _radius, const Vector3f& _col, float _ka);
 			virtual ~area_light_t() {}
 			virtual color_t direct(const Vector3f& hitpt, const ray_t &view_ray, const Vector3f& normal, const material_t* mat, const scene_t* scn) const;
 			/// Prints information about the light to the stream.
 			virtual void print(std::ostream &stream) const;
 
 			Vector3f sample_point() const ;
+			virtual bool intersect(hit_t& result, const ray_t& _ray) const;
 	};
 }
