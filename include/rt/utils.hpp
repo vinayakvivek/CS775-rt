@@ -94,8 +94,9 @@ namespace rt
     return (double)rand() / (double)RAND_MAX;
   }
 
-  inline Vector2f randomInUnitDisk() {
-    Vector2f p;
+  inline Vector3f randomInUnitDisk() {
+    Vector3f p;
+    p.z() = 0;
     do {
       p.x() = 2*erand48()-1.0;
       p.y() = 2*erand48()-1.0;

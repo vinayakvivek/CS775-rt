@@ -168,13 +168,12 @@ color_t path_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) con
 	    }
 
 	    //schlick(cosine, eta) < erand48()
-			if (refract(_ray, normal, ni_over_nt, scattered_ray)) {
+			if (schlick(cosine, eta) < erand48() && refract(_ray, normal, ni_over_nt, scattered_ray)) {
 				// refract
 				d_col += _scn->intg->radiance(_scn, scattered_ray, d + 1);
 			} else {
 				// total internal reflection
 				reflect(_ray, normal, scattered_ray);
-				// scattered_ray.direction += fuzz * randomInUnitSphere();
 				d_col += _scn->intg->radiance(_scn, scattered_ray, d + 1);
 			}
 
@@ -189,7 +188,7 @@ color_t path_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) con
 
 		} else {
 
-			// scattered_ray.origin += normal * EPSILON;
+			scattered_ray.origin -= normal * 0.001;
 
 			scattered_ray.direction = scattered_ray.origin + normal + randomInUnitSphere();
 			d_col += 0.5 * _scn->intg->radiance(_scn, scattered_ray, d + 1);

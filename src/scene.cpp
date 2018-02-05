@@ -345,6 +345,8 @@ int scene_t::parse_lights(XMLElement* _elm)
 
 		if (name == "pointlight")
 			lits.push_back(parse_pointlight(elm_child));
+		else if (name == "arealight")
+			lits.push_back(parse_arealight(elm_child));
 		else
 			throw std::invalid_argument("Invalid light in scene file.");
 
@@ -360,6 +362,14 @@ light_t* scene_t::parse_pointlight(XMLElement* _elm)
 {
 	return (light_t*)(new point_light_t(
 			parse_vector3(_elm, "position"),
+			parse_color(_elm, "color"),
+			parse_float(_elm, "ka")));
+}
+
+light_t* scene_t::parse_arealight(XMLElement* _elm) {
+	return (light_t*)(new area_light_t(
+			parse_vector3(_elm, "center"),
+			parse_float(_elm, "radius"),
 			parse_color(_elm, "color"),
 			parse_float(_elm, "ka")));
 }

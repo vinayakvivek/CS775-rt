@@ -127,11 +127,12 @@
 </objects>
 
 <lights>
-    <pointlight>
-        <position vector3="0.0 2.0 -2.0" />
+    <arealight>
+        <center vector3="0.0 2.0 -2.0" />
+        <radius float="1.0"/>
         <color color="1.0 1.0 1.0" />
         <ka float="0.4" />
-    </pointlight>
+    </arealight>
 </lights>
 
 <integrator>

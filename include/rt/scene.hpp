@@ -130,6 +130,8 @@ namespace rt
     int parse_lights(XMLElement* _elm);
     /// Parse a point light.
     light_t* parse_pointlight(XMLElement* _elm);
+    /// Parse area light
+    light_t* parse_arealight(XMLElement* _elm);
 
     /// Parse the image.
     image_t* parse_image(XMLElement* _elm);
