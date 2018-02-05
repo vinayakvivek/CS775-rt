@@ -93,4 +93,23 @@ namespace rt
   inline double erand48() {
     return (double)rand() / (double)RAND_MAX;
   }
+
+  inline Vector2f randomInUnitDisk() {
+    Vector2f p;
+    do {
+      p.x() = 2*erand48()-1.0;
+      p.y() = 2*erand48()-1.0;
+    } while (p.norm() >= 1);
+    return p;
+  }
+
+  inline Vector3f randomInUnitSphere() {
+    Vector3f p;
+    do {
+      p.x() = 2*erand48()-1.0;
+      p.y() = 2*erand48()-1.0;
+      p.z() = 2*erand48()-1.0;
+    } while (p.norm() >= 1);
+    return p;
+  }
 }

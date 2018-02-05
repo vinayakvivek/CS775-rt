@@ -35,11 +35,13 @@ color_t point_light_t::direct(const Vector3f& hitpt, const ray_t &view_ray, cons
 		}
 	}
 
-	if (!found_intersection && !mat->get_is_transmit()) {
+	if (!found_intersection) {
 
 		float d = direction.norm();
 		float cos = normal.dot(direction);
-		float attenuation = fmin(1, 1.0 / (0.1 + 0.00001 * d + 0.00001 * d*d));
+		float attenuation = fmin(1, 1.0 / (1.0 + 0.1 * d + 0.1 * d*d));
+
+		// std::cout << attenuation << "\n";
 
 		Vector3f h = (-view_ray.direction + direction).normalized();
 
@@ -49,7 +51,10 @@ color_t point_light_t::direct(const Vector3f& hitpt, const ray_t &view_ray, cons
 		shade *= attenuation;
 	}
 
-	return shade.array() * col.array();
+	// IOFormat CommaInitFmt(StreamPrecision, DontAlignCols, ", ", ", ", "", "", "[ ", " ]");
+	// std::cout << (shade.array() * col.array() * ka).format(CommaInitFmt) << "\n";
+
+	return shade.array() * col.array() * ka;
 }
 
 

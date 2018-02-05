@@ -1,7 +1,7 @@
 <rt-scene>
 
 <camera>
-	<eye 	vector3="0.0 0.5 3.0" />
+	<eye 	vector3="0.5 1.0 2.0" />
 	<lookat	vector3="0.0 0.5 0.0" />
 	<up		vector3="0.0 -1.0 0.0" />
 	<fov	angle="50 deg" />
@@ -65,7 +65,7 @@
 		<texture string="./textures/iu.bmp" />
 	</sphere>
 	<sphere material="glass">
-		<center vector3="-0.5 0.0 -2.0" />
+		<center vector3="0.0 0.0 -2.0" />
 		<radius float="0.5" />
 		<texture string="" />
 	</sphere>

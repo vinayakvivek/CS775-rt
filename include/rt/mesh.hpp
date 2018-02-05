@@ -17,7 +17,7 @@ namespace rt
     triangle_t() {}
     triangle_t(const Vector3f &a, const Vector3f &b, const Vector3f &c) {
       A = a; B = b; C = c;
-      N = ((B-A).cross(C-B)).normalized();
+      N = -((B-A).cross(C-B)).normalized();
     }
   };
 

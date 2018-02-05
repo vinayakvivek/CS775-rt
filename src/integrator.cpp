@@ -11,7 +11,7 @@ void reflect(const ray_t &incident_ray, const Vector3f &N, ray_t &reflected_ray)
 
 // return: false ==> total internal reflection
 bool refract(const ray_t &incident_ray, const Vector3f &N, float eta, ray_t &refracted_ray) {
-	Vector3f I = incident_ray.direction.normalized();
+	Vector3f I = incident_ray.direction;
   float dt = I.dot(N);
   float discriminant = 1.0 - eta*eta*(1 - dt*dt);
   if (discriminant > 0) {
@@ -45,7 +45,7 @@ color_t whitted_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 
 	if (!found_intersection) {
 		// std::cout << "no intersection!\n";
-		// Vector3f unit_direction = _ray.direction.normalized();
+		// Vector3f unit_direction = _ray.direction;
 	 //  float t = 0.5f * (unit_direction.y() + 1.0f);
 	 //  return float(1.0 - t) * color_t(1.0, 1.0, 1.0) + t * color_t(0.5, 0.7, 1.0);
 		return _scn->img->get_bgcolor();
@@ -69,7 +69,7 @@ color_t whitted_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 		scattered_ray.origin = hitpt + normal * EPSILON;
 
 		if (can_transmit && can_reflect) {
-			float cosine = _ray.direction.normalized().dot(normal);
+			float cosine = _ray.direction.dot(normal);
 			float ni_over_nt;
 			float eta = minhit.obj->get_material()->get_eta();
 
@@ -82,6 +82,10 @@ color_t whitted_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 
 	    color_t kr = minhit.obj->get_material()->get_reflect();
 	    color_t kt = minhit.obj->get_material()->get_transmit();
+
+			// double nc=1, nt=eta, c=1-fabs(cosine);
+			// double a=nt-nc, b=nt+nc, R0=a*a/(b*b);
+			// double Re=R0+(1-R0)*c*c*c*c*c,Tr=1-Re;
 
 			if (refract(_ray, normal, ni_over_nt, scattered_ray)) {
 				// refract
@@ -116,5 +120,82 @@ color_t whitted_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 
 color_t path_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) const
 {
-	return color_t(1.0, 0.0, 0.5);
+	bool found_intersection=false;
+	std::vector<object_t*>::const_iterator oit;
+	hit_t hit, minhit;
+
+	for (oit=_scn->objs.begin(); oit!=_scn->objs.end(); oit++) {
+		if ((*oit)->intersect(hit, _ray)) {
+		  _ray.maxt = hit.t;
+		  minhit = hit;
+		  found_intersection = true;
+		}
+	}
+
+	if (!found_intersection) {
+		return _scn->img->get_bgcolor();
+	}
+
+	Vector3f hitpt = _ray.origin + _ray.maxt * _ray.direction;
+	Vector3f normal = minhit.normal;
+
+	color_t d_col(0.0);
+	std::list<light_t*>::const_iterator lit;
+	for(lit=_scn->lits.begin(); lit!=_scn->lits.end(); lit++) {
+		d_col += (*lit)->direct(hitpt, _ray, normal, minhit.obj->get_material(), _scn);
+	}
+
+	if (d <= _scn->intg->depth) {
+		bool can_transmit = minhit.obj->get_material()->get_is_transmit();
+		bool can_reflect = minhit.obj->get_material()->get_is_reflect();
+		ray_t scattered_ray;
+		scattered_ray.origin = hitpt;
+
+		double fuzz = 0.01;
+
+		if (can_transmit && can_reflect) {
+			float cosine = _ray.direction.dot(normal);
+			float ni_over_nt;
+			float eta = minhit.obj->get_material()->get_eta();
+
+	    if (cosine > 0) {
+	      normal = -normal;
+	      ni_over_nt = eta;
+	      cosine = eta * cosine;
+	    } else {
+	      ni_over_nt = 1.0 / eta;
+	      cosine = -cosine;
+	    }
+
+	    //schlick(cosine, eta) < erand48()
+			if (refract(_ray, normal, ni_over_nt, scattered_ray)) {
+				// refract
+				d_col += _scn->intg->radiance(_scn, scattered_ray, d + 1);
+			} else {
+				// total internal reflection
+				reflect(_ray, normal, scattered_ray);
+				// scattered_ray.direction += fuzz * randomInUnitSphere();
+				d_col += _scn->intg->radiance(_scn, scattered_ray, d + 1);
+			}
+
+		} else if (can_reflect) {
+
+			// scattered_ray.origin += normal * EPSILON;
+
+			// reflection only
+			reflect(_ray, normal, scattered_ray);
+			scattered_ray.direction += fuzz * randomInUnitSphere();
+			d_col += _scn->intg->radiance(_scn, scattered_ray, d + 1);
+
+		} else {
+
+			// scattered_ray.origin += normal * EPSILON;
+
+			scattered_ray.direction = scattered_ray.origin + normal + randomInUnitSphere();
+			d_col += 0.5 * _scn->intg->radiance(_scn, scattered_ray, d + 1);
+		}
+	}
+
+	d_col *= minhit.obj->get_texture(normal);
+	return d_col;
 }

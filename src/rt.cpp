@@ -29,7 +29,7 @@ void rt::render(const scene_t* scn)
         col += scn->intg->radiance(scn, ray, 0);
       } else {
         for (int s = 0; s < nspp; ++s) {
-          ray = scn->cam->get_ray(float(i - 0.5 + erand48())/float(w), float(j - 0.5 + erand48())/float(w));
+          ray = scn->cam->get_ray(float(i + erand48())/float(w), float(j + erand48())/float(w));
           col += scn->intg->radiance(scn, ray, 0);
         }
         col /= nspp;
