@@ -34,5 +34,5 @@
 
 namespace rt
 {
-	void render(const scene_t* scn);
+	void render(const scene_t* scn, std::string file_name);
 }

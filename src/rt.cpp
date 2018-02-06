@@ -5,7 +5,7 @@
 
 using namespace rt;
 
-void rt::render(const scene_t* scn)
+void rt::render(const scene_t* scn, std::string file_name)
 {
   unsigned int w=scn->img->get_width();
   unsigned int h=scn->img->get_height();
@@ -37,6 +37,8 @@ void rt::render(const scene_t* scn)
 
       scn->img->set_pixel(i, j, col);
     }
+
+    scn->img->write(file_name);
   }
 
   std::cout << "\n";
@@ -71,15 +73,13 @@ int main(int argc, char **argv)
         float aperture = 0.1;
         scn.cam = new camera_t(eye, lookat, vup, vfov, float(w)/float(h), aperture, dist_to_focus);
 
-        rt::render(&scn);
-
         std::string img_filename = scene_filename;
         size_t lastdot = img_filename.find_last_of(".");
         if (lastdot != std::string::npos)
           img_filename.erase(lastdot, std::string::npos);
         img_filename += ".ppm";
 
-        scn.img->write(img_filename);
+        rt::render(&scn, img_filename);
       }
       else
       {
