@@ -1,7 +1,7 @@
 <rt-scene>
 
 <camera>
-    <eye    vector3="0.0 1.0 5.0" />
+    <eye    vector3="0.0 1.0 4.5" />
     <lookat vector3="0.0 1.0 0.0" />
     <up     vector3="0.0 -1.0 0.0" />
     <fov    angle="50 deg" />
@@ -102,7 +102,7 @@
 
     <!-- back -->
     <sphere material="diffuse-black">
-        <center vector3="0.0 0.0 1005.0" />
+        <center vector3="0.0 0.0 1004.6" />
         <radius float="1000" />
     </sphere>
 
@@ -128,18 +128,18 @@
 
 <lights>
     <arealight>
-        <center vector3="0.0 1.9 -2.6" />
+        <center vector3="0.0 2.59 -1.5" />
         <normal vector3="0.0 -1.0 0.0" />
-        <radius vector3="0.0 0.0 0.05" />
+        <radius vector3="0.0 0.0 0.7" />
         <color color="1.0 1.0 1.0" />
-        <ka float="0.4" />
+        <ka float="0.6" />
     </arealight>
 </lights>
 
 <integrator>
     <path>
         <depth-of-recursion int="50" />
-        <samples-per-pixel int="1" />
+        <samples-per-pixel int="5" />
     </path>
 </integrator>
 

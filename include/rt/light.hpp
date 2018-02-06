@@ -33,6 +33,20 @@ namespace rt
 {
 	/// Forward Declaration.
 	class scene_t;
+	class light_t;
+
+	struct light_hit_t {
+    const light_t *light;
+    float t;
+    Vector3f normal;
+
+    light_hit_t() {}
+    light_hit_t(const light_t *_l, float _t, Vector3f _n) {
+      light = _l;
+      t = _t;
+      normal = _n;
+    }
+  };
 
 	/**
 	 * \brief  This is the abstract base class for lights.
@@ -57,7 +71,10 @@ namespace rt
 		**/
 		virtual color_t direct(const Vector3f& hitpt, const ray_t &view_ray, const Vector3f& normal, const material_t* mat, const scene_t* scn) const = 0;
 
-		virtual bool intersect(hit_t& result, const ray_t& _ray) const = 0;
+		virtual bool intersect(light_hit_t& result, const ray_t& _ray) const = 0;
+
+		virtual color_t get_color() const = 0;
+		virtual float get_ka() const = 0;
 
 		/// Prints information about the light to the stream.
 		virtual void print(std::ostream &stream) const = 0;
@@ -89,9 +106,12 @@ namespace rt
 		**/
 		virtual color_t direct(const Vector3f& hitpt, const ray_t &view_ray, const Vector3f& normal, const material_t* mat, const scene_t* scn) const;
 
-		virtual bool intersect(hit_t& result, const ray_t& _ray) const {
+		virtual bool intersect(light_hit_t& result, const ray_t& _ray) const {
 			return false;
 		}
+
+		virtual color_t get_color() const {return color_t(col.x(), col.y(), col.z());}
+		virtual float get_ka() const {return ka;}
 
 		/// Prints information about the light to the stream.
 		virtual void print(std::ostream &stream) const;
@@ -117,6 +137,9 @@ namespace rt
 			virtual void print(std::ostream &stream) const;
 
 			Vector3f sample_point() const ;
-			virtual bool intersect(hit_t& result, const ray_t& _ray) const;
+			virtual bool intersect(light_hit_t& result, const ray_t& _ray) const;
+
+			virtual color_t get_color() const {return color_t(col.x(), col.y(), col.z());}
+			virtual float get_ka() const {return ka;}
 	};
 }

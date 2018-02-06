@@ -140,9 +140,23 @@ color_t path_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) con
 	Vector3f normal = minhit.normal;
 
 	color_t d_col(0.0);
+	bool found_light_intersection = false;
 	std::list<light_t*>::const_iterator lit;
+	light_hit_t lhit, minlhit;
+
 	for(lit=_scn->lits.begin(); lit!=_scn->lits.end(); lit++) {
-		d_col += (*lit)->direct(hitpt, _ray, normal, minhit.obj->get_material(), _scn);
+		if ((*lit)->intersect(lhit, _ray)) {
+			_ray.maxt = lhit.t;
+			minlhit = lhit;
+			found_light_intersection = true;
+		} else {
+			d_col += (*lit)->direct(hitpt, _ray, normal, minhit.obj->get_material(), _scn);
+		}
+	}
+
+	if (found_light_intersection) {
+		// std::cout << d << " - found_light_intersection\n";
+		return (minlhit.light->get_color());
 	}
 
 	if (d <= _scn->intg->depth) {
@@ -151,7 +165,7 @@ color_t path_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) con
 		ray_t scattered_ray;
 		scattered_ray.origin = hitpt;
 
-		double fuzz = 0.01;
+		double fuzz = 0.05;
 
 		if (can_transmit && can_reflect) {
 			float cosine = _ray.direction.dot(normal);
@@ -183,15 +197,16 @@ color_t path_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) con
 
 			// reflection only
 			reflect(_ray, normal, scattered_ray);
-			scattered_ray.direction += fuzz * randomInUnitSphere();
+			scattered_ray.direction = (scattered_ray.direction + fuzz * randomInUnitSphere()).normalized();
 			d_col += _scn->intg->radiance(_scn, scattered_ray, d + 1);
 
 		} else {
 
-			scattered_ray.origin -= normal * 0.001;
+			// scattered_ray.origin -= normal * 0.001;
+			scattered_ray.origin += normal * EPSILON;
 
-			scattered_ray.direction = scattered_ray.origin + normal + randomInUnitSphere();
-			d_col += 0.5 * _scn->intg->radiance(_scn, scattered_ray, d + 1);
+			scattered_ray.direction = (normal + randomInUnitSphere()).normalized();
+			d_col += 0.3 * _scn->intg->radiance(_scn, scattered_ray, d + 1);
 		}
 	}
 

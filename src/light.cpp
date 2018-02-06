@@ -87,7 +87,7 @@ area_light_t::area_light_t(const Vector3f &_center, const Vector3f _normal, cons
   	w.x(), w.y(), w.z(), -center.dot(w),
   	0.0,   0.0,   0.0,   1.0;
 
-  transform = transform_t(to_light_coords);
+  transform = transform_t(to_light_coords.inverse());
 }
 
 
@@ -100,11 +100,12 @@ color_t area_light_t::direct(const Vector3f& hitpt, const ray_t &view_ray, const
 {
 	Vector3f eps_hitpt = hitpt + EPSILON * normal;
 
-	int num_shadowrays = 10;
+	int num_shadowrays = 1;
 	color_t total_shade(0.0, 0.0, 0.0);
 
 	for (int i = 0; i < num_shadowrays; ++i) {
 		Vector3f pos = sample_point();
+
 		Vector3f direction = (pos - eps_hitpt).normalized();
 		ray_t shadow_ray(eps_hitpt, direction);
 		shadow_ray.maxt = (pos - eps_hitpt).norm();
@@ -126,7 +127,7 @@ color_t area_light_t::direct(const Vector3f& hitpt, const ray_t &view_ray, const
 
 			float d = direction.norm();
 			float cos = normal.dot(direction);
-			float attenuation = fmin(1, 1.0 / (1.0 + 0.1 * d + 0.1 * d*d));
+			float attenuation = fmin(1, 1.0 / (1.0 + 0.001 * d + 0.0001 * d*d));
 			Vector3f h = (-view_ray.direction + direction).normalized();
 
 			shade = mat->get_diffuse() * fmax(0.0, cos) +
@@ -143,7 +144,20 @@ color_t area_light_t::direct(const Vector3f& hitpt, const ray_t &view_ray, const
 	return total_shade.array() * col.array() * ka;
 }
 
-bool area_light_t::intersect(hit_t& result, const ray_t& _ray) const {
+bool area_light_t::intersect(light_hit_t& result, const ray_t& _ray) const {
+	float D = -normal.dot(center);
+	float t = - (normal.dot(_ray.origin) + D) / normal.dot(_ray.direction);
+
+	Vector3f point = _ray(t);
+	if ((point - center).norm() < radius.norm()) {
+		if (t < _ray.maxt && t > _ray.mint) {
+			result.light = this;
+			result.t = t;
+			result.normal = normal;
+			return true;
+		}
+	}
+
 	return false;
 }
 
