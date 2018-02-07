@@ -325,7 +325,8 @@ image_t* scene_t::parse_image(XMLElement* _elm)
 	return new image_t(
 					parse_float(elm_img, "width"),
 					parse_float(elm_img, "height"),
-					bgc);
+					bgc,
+					parse_int(elm_img, "samples-per-pixel"));
 
 }
 
@@ -388,6 +389,8 @@ integrator_t* scene_t::parse_integrator(XMLElement* _elm)
 		return parse_whitted_integrator(elm_child);
 	} else if (name == "path") {
 		return parse_path_integrator(elm_child);
+	} else if (name == "smallpt") {
+		return parse_smallpt_integrator(elm_child);
 	}
 	else
 		throw std::invalid_argument("Invalid integrator in scene file.");
@@ -398,13 +401,20 @@ integrator_t* scene_t::parse_integrator(XMLElement* _elm)
 integrator_t* scene_t::parse_whitted_integrator(XMLElement *_elm)
 {
 	return (integrator_t*)(new whitted_integrator_t(
-								parse_int(_elm, "depth-of-recursion"),
-								parse_int(_elm, "samples-per-pixel")));
+								parse_int(_elm, "depth-of-recursion")
+								));
 }
 
 integrator_t* scene_t::parse_path_integrator(XMLElement *_elm)
 {
 	return (integrator_t*)(new path_integrator_t(
-								parse_int(_elm, "depth-of-recursion"),
-								parse_int(_elm, "samples-per-pixel")));
+								parse_int(_elm, "depth-of-recursion")
+								));
+}
+
+integrator_t* scene_t::parse_smallpt_integrator(XMLElement *_elm)
+{
+	return (integrator_t*)(new smallpt_integrator_t(
+								parse_int(_elm, "depth-of-recursion")
+								));
 }

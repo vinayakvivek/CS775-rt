@@ -155,7 +155,6 @@ color_t path_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) con
 	}
 
 	if (found_light_intersection) {
-		// std::cout << d << " - found_light_intersection\n";
 		return (minlhit.light->get_color());
 	}
 
@@ -212,4 +211,8 @@ color_t path_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) con
 
 	d_col *= minhit.obj->get_texture(normal);
 	return d_col;
+}
+
+color_t smallpt_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) const {
+	return color_t(1.0, 0.0, 1.0);
 }

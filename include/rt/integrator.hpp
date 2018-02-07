@@ -45,12 +45,10 @@ namespace rt
 		/// This may or may not be used by the implementing class
 		int depth;
 
-    int nspp;
-
 		/// Constructor
-		integrator_t():depth(1), nspp(10) { }
+		integrator_t():depth(1) { }
 		/// Constructor
-		integrator_t(int _d, int _nspp):depth(_d), nspp(_nspp) { }
+		integrator_t(int _d):depth(_d) { }
 		/// Destructor
 		virtual ~integrator_t() { }
 
@@ -72,7 +70,7 @@ namespace rt
 		/// Constructor
 		whitted_integrator_t() { }
 		/// Constructor
-		whitted_integrator_t(int _d, int _nspp):integrator_t(_d, _nspp) { }
+		whitted_integrator_t(int _d):integrator_t(_d) { }
 		/// Destructor
 		virtual ~whitted_integrator_t() { }
 
@@ -94,12 +92,34 @@ namespace rt
     /// Constructor
     path_integrator_t() { }
     /// Constructor
-    path_integrator_t(int _d, int _nspp):integrator_t(_d, _nspp) { }
+    path_integrator_t(int _d):integrator_t(_d) { }
     /// Destructor
     virtual ~path_integrator_t() { }
 
     /// Returns the name of the integrator.
     virtual std::string get_name(void) const {return "path";}
+
+    /// Returns the radiance estimate along ray _ray, for scene scn, at bounce depth d.
+    virtual color_t radiance(const scene_t* scn, ray_t& _ray, int d) const;
+  };
+
+  /**
+   * \brief This is the monte carlo path integrator.
+   **/
+  class smallpt_integrator_t : public integrator_t
+  {
+
+  public:
+
+    /// Constructor
+    smallpt_integrator_t() { }
+    /// Constructor
+    smallpt_integrator_t(int _d):integrator_t(_d) { }
+    /// Destructor
+    virtual ~smallpt_integrator_t() { }
+
+    /// Returns the name of the integrator.
+    virtual std::string get_name(void) const {return "smallpt";}
 
     /// Returns the radiance estimate along ray _ray, for scene scn, at bounce depth d.
     virtual color_t radiance(const scene_t* scn, ray_t& _ray, int d) const;

@@ -43,17 +43,20 @@ namespace rt
 		///Background color - a ray gets this color if it does not hit anything
 		color_t bgcolor;
 
-		/** 
+    /// number of sample per pixel
+    int nspp;
+
+		/**
 		 * The pixel data of size width * height * num_channels
 		 * We compute radiance as a unbounded float. Writing to the framebuffer requires clamping to 0.0-1.0 range
 		 * Then a gamma correction (compression) using a default value of 2.2 is applied using the rt::to_char function.
-		 * Finally the value is cast to char by multiplying with 255. 
+		 * Finally the value is cast to char by multiplying with 255.
 		 */
 		char *data;
 
 	public:
 		/// Constructor.
-		image_t(int width, int height, color_t _bgc);
+		image_t(int width, int height, color_t _bgc, int _nspp);
 		/// Destructor.
 		virtual ~image_t();
 
@@ -65,6 +68,8 @@ namespace rt
 		float get_aspect(void) const;
 		/// Returns background color.
 		color_t get_bgcolor(void) const;
+
+    int get_nspp() const {return nspp;}
 
 		/// Returns a pixel location with coordinates between 0.0-1.0 from int pixel coords.
 		/// This only returns one sample per pixel.

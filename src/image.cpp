@@ -25,14 +25,15 @@
 
 using namespace rt;
 
-image_t::image_t(int _w, int _h, color_t _bgc):width(_w),height(_h),bgcolor(_bgc)
+image_t::image_t(int _w, int _h, color_t _bgc, int _nspp = 1)
+  : width(_w), height(_h), bgcolor(_bgc), nspp(_nspp)
 {
 	aspect = float(width)/float(height);
-	data = new char[width*height*3]; 
+	data = new char[width*height*3];
 }
 
 image_t::~image_t()
-{ 
+{
 	delete data;
 }
 
@@ -76,10 +77,11 @@ void image_t::write(std::string filename)
 void image_t::print(std::ostream &stream)
 {
 	Eigen::IOFormat CommaInitFmt(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", ", ", "", "", "[ ", " ]");
-	
+
 	stream<<"Image Properties: -------------------------------"<<std::endl;
 	stream<<"BG Color: "<<bgcolor.format(CommaInitFmt)<<std::endl;
 	stream<<"Width: "<<width<<std::endl;
 	stream<<"Height:"<<height<<std::endl;
-	stream<<"aspect:"<<aspect<<std::endl<<std::endl;
+	stream<<"aspect:"<<aspect<<std::endl;
+  stream<<"nspp:"<<nspp<<std::endl<<std::endl;
 }
