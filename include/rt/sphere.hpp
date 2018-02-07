@@ -43,16 +43,17 @@ namespace rt
 		/// Sphere radius
 		float radius;
 
-		/// Sphere material
-		material_t* mat;
-
-    texture_t* tex;
-
 	public:
 		/// Constructor
 		sphere_t(material_t* _mat);
 		/// Constructor
-		sphere_t(material_t* _mat, Eigen::Vector3f _c, float _r, std::string texture_file);
+		sphere_t(
+      material_t* _mat,
+      const color_t &_color,
+      Vector3f _c,
+      float _r,
+      std::string texture_file);
+
 		/// Destuctor
 		virtual ~sphere_t();
 
@@ -72,6 +73,8 @@ namespace rt
 
 		/// Returns the material for the sphere.
 		material_t* get_material(void) const;
+
+    color_t get_color() const;
 
 		/// Prints information about the sphere. to stream.
 		virtual void print(std::ostream &stream) const;

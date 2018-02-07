@@ -214,6 +214,11 @@ color_t path_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) con
 }
 
 color_t smallpt_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) const {
+
+	if (d >= _scn->intg->depth) {
+		return _scn->img->get_bgcolor();
+	}
+
 	bool found_intersection = false;
 	std::vector<object_t*>::const_iterator oit;
 	hit_t hit, minhit;
@@ -230,6 +235,7 @@ color_t smallpt_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 	std::list<light_t*>::const_iterator lit;
 	light_hit_t lhit, minlhit;
 
+	color_t d_col(0.0);
 	for(lit=_scn->lits.begin(); lit!=_scn->lits.end(); lit++) {
 		if ((*lit)->intersect(lhit, _ray)) {
 			_ray.maxt = lhit.t;
@@ -249,7 +255,8 @@ color_t smallpt_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 	Vector3f hitpt = _ray.origin + _ray.maxt * _ray.direction;
 	Vector3f n = minhit.normal;
 	Vector3f nl = (n.dot(_ray.direction) < 0) ? n : -1*n;
-	color_t f = minhit.obj->get_material()->get_diffuse();
+
+	color_t f = minhit.obj->get_color();
 
 	double p = fmax(f.x(), fmax(f.y(), f.z()));
 
@@ -260,36 +267,31 @@ color_t smallpt_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 			return _scn->img->get_bgcolor();
 	}
 
-	// if (d <= _scn->intg->depth) {
-	// 	return color_t(0.0, 0.0, 0.0);
-	// }
+	f = f * minhit.obj->get_texture(nl);
+
+	for(lit=_scn->lits.begin(); lit!=_scn->lits.end(); lit++) {
+		d_col += 0.2 * f * (*lit)->direct(hitpt, _ray, nl, minhit.obj->get_material(), _scn);
+	}
 
 	bool can_transmit = minhit.obj->get_material()->get_is_transmit();
 	bool can_reflect = minhit.obj->get_material()->get_is_reflect();
 
 	if (!can_reflect && !can_transmit) {
 		// DIFFUSE
-		// double r1 = 2 * M_PI * erand48();
-  //   double r2 = erand48();
-  //   double r2s = sqrt(r2);
-
-  //   Vector3f w = nl;
-  //   Vector3f u = ((fabs(w.x()) > .1 ? Vector3f(0,1,0) : Vector3f(1,0,0)).cross(w)).normalized();
-  //   Vector3f v = w.cross(u);
-
     ray_t scattered_ray;
 		scattered_ray.origin = hitpt;
-    // scattered_ray.direction = (u*cos(r1)*r2s + v*sin(r1)*r2s + w*sqrt(1-r2)).normalized();
-
    	scattered_ray.direction = (nl + randomInUnitSphere()).normalized();
-    return f * _scn->intg->radiance(_scn, scattered_ray, d+1);
+    d_col += f * _scn->intg->radiance(_scn, scattered_ray, d+1);
+    return d_col;
 
 	} else if (can_reflect && !can_transmit) {
 		// SPECULAR
 		ray_t reflected_ray;
 		reflected_ray.origin = hitpt;
 		reflect(_ray, n, reflected_ray);
-		return f * _scn->intg->radiance(_scn, reflected_ray, d+1);
+		d_col += f * _scn->intg->radiance(_scn, reflected_ray, d+1);
+		return d_col;
+
 	} else {
 		// DIELECTRIC
 		ray_t reflected_ray, transmitted_ray;
@@ -304,7 +306,8 @@ color_t smallpt_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 	  reflect(_ray, n, reflected_ray);
 
 	  if (!refract(_ray, nl, nnt, transmitted_ray)) {
-	  	return f * _scn->intg->radiance(_scn, reflected_ray, d+1);
+	  	d_col += f * _scn->intg->radiance(_scn, reflected_ray, d+1);
+	  	return d_col;
 	  }
 
 	  Vector3f tdir = transmitted_ray.direction;
@@ -317,13 +320,15 @@ color_t smallpt_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 
 	  if (d > 2) {
 	  	if (erand48() < P)
-	  		return RP * _scn->intg->radiance(_scn, reflected_ray, d+1);
+	  		d_col += f * RP * _scn->intg->radiance(_scn, reflected_ray, d+1);
 	  	else
-	  		return TP * _scn->intg->radiance(_scn, transmitted_ray, d+1);
+	  		d_col += f * TP * _scn->intg->radiance(_scn, transmitted_ray, d+1);
 	  } else {
-	  	return Re * _scn->intg->radiance(_scn, reflected_ray, d+1) +
-	  				 Tr * _scn->intg->radiance(_scn, transmitted_ray, d+1);
+	  	d_col += f * (Re * _scn->intg->radiance(_scn, reflected_ray, d+1) +
+	  				 Tr * _scn->intg->radiance(_scn, transmitted_ray, d+1));
 	  }
+
+	  return d_col;
 	}
 
 	return _scn->img->get_bgcolor();

@@ -261,6 +261,7 @@ object_t* scene_t::parse_object_sphere(XMLElement* _elm, const std::list<materia
 
 	return (object_t*)(new sphere_t(
 											find_material(parse_parameter(_elm, "material"),	matlist),
+											parse_color(_elm, "color"),
 											parse_vector3(_elm,  "center"),
 											parse_float(_elm, "radius"),
 											texture_file
@@ -270,6 +271,7 @@ object_t* scene_t::parse_object_sphere(XMLElement* _elm, const std::list<materia
 object_t* scene_t::parse_object_mesh(XMLElement* _elm, const std::list<material_t*>& matlist) {
 	return (object_t*)(new mesh_t(
 											find_material(parse_parameter(_elm, "material"),	matlist),
+											parse_color(_elm, "color"),
 											parse_property(_elm, "objfile", "string"),
 											parse_vector3(_elm,  "center"),
 											parse_vector3(_elm,  "scale"),
@@ -373,7 +375,8 @@ light_t* scene_t::parse_arealight(XMLElement* _elm) {
 			parse_vector3(_elm, "normal"),
 			parse_vector3(_elm, "radius"),
 			parse_color(_elm, "color"),
-			parse_float(_elm, "ka")));
+			parse_float(_elm, "ka"),
+			parse_int(_elm, "numshadowrays")));
 }
 
 integrator_t* scene_t::parse_integrator(XMLElement* _elm)

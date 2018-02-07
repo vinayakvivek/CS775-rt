@@ -26,6 +26,7 @@
 #include <material.hpp>
 #include <ray.hpp>
 #include <utils.hpp>
+#include <texture.hpp>
 
 namespace rt
 {
@@ -53,32 +54,42 @@ namespace rt
 	 **/
 	class object_t
 	{
+
+    protected:
+        color_t color;
+        material_t* mat;
+        texture_t* tex;
+
 	public:
 		/// Constructor
-		object_t();
+        object_t();
+        object_t(material_t* _mat);
+        object_t(material_t* _mat, const color_t &_color);
 
-		/// Destructor
-		virtual ~object_t();
+        /// Destructor
+        virtual ~object_t();
 
-		/// Returns a name for the object
-		virtual std::string get_name(void) const = 0;
+        /// Returns a name for the object
+        virtual std::string get_name(void) const = 0;
 
-		/**
-		* Returns true if the _ray hits this object. The hit information is returned in result.
-		* This is not valid if there is no intersection and the function returns false.
-		**/
-		virtual bool intersect(hit_t& result, const ray_t& _ray) const = 0;
+        /**
+        * Returns true if the _ray hits this object. The hit information is returned in result.
+        * This is not valid if there is no intersection and the function returns false.
+        **/
+        virtual bool intersect(hit_t& result, const ray_t& _ray) const = 0;
 
-		/// Returns the normal to the surface at point _p.
-		virtual Vector3f get_normal(Vector3f& _p) const = 0;
+        /// Returns the normal to the surface at point _p.
+        virtual Vector3f get_normal(Vector3f& _p) const = 0;
 
-    /// Returns the texture color at the point surface _p.
-    virtual color_t get_texture(Vector3f &_p) const = 0;
+        /// Returns the texture color at the point surface _p.
+        virtual color_t get_texture(Vector3f &_p) const = 0;
 
-		/// Returns the material for the object.
-		virtual material_t* get_material(void) const = 0;
+        /// Returns the material for the object.
+        virtual material_t* get_material(void) const = 0;
 
-		/// Prints information about the object to stream.
-		virtual void print(std::ostream &stream) const = 0;
+        virtual color_t get_color() const = 0;
+
+        /// Prints information about the object to stream.
+        virtual void print(std::ostream &stream) const = 0;
 	};
 }

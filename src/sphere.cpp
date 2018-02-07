@@ -2,10 +2,20 @@
 
 using namespace rt;
 
-sphere_t::sphere_t(material_t* _mat):center(0.0,0.0,0.0),radius(1.0),mat(_mat) { }
-sphere_t::sphere_t(material_t* _mat, Eigen::Vector3f _c, float _r, std::string texture_file): center(_c), radius(_r), mat(_mat) {
+sphere_t::sphere_t(material_t* _mat) : object_t(_mat), center(0.0,0.0,0.0), radius(1.0) { }
+sphere_t::sphere_t(
+	material_t* _mat,
+	const color_t &_color,
+	Vector3f _c,
+	float _r,
+	std::string texture_file
+): object_t(_mat, _color), center(_c), radius(_r) {
 	std::cout << "texture: " << texture_file << "\n";
 	tex = new texture_t(texture_file);
+}
+
+color_t sphere_t::get_color() const {
+	return color;
 }
 
 sphere_t::~sphere_t() { }

@@ -10,22 +10,13 @@
 <image>
 	<width float="600" />
 	<height float="600" />
-	<bgcolor color="0.25 0.25 0.75" />
+	<bgcolor color="0.0 0.0 0.0" />
+	<samples-per-pixel int="10" />
 </image>
 
 <materials>
-	<simplemat id="diffuse-white">
-		<diffuse color=".75 .75 .75" />
-		<specular color="0.0 0.0 0.0" />
-		<reflect color="0.0 0.0 0.0" />
-		<transmit color="0.0 0.0 0.0" />
-		<eta float="0.0"/>
-		<n float="0"/>
-		<isreflect bool="false"/>
-		<istransmit bool="false"/>
-	</simplemat>
-	<simplemat id="diffuse-red">
-		<diffuse color=".75 .25 .25" />
+	<simplemat id="diffuse">
+		<diffuse color="0.7 0.2 0.2" />
 		<specular color="0.0 0.0 0.0" />
 		<reflect color="0.0 0.0 0.0" />
 		<transmit color="0.0 0.0 0.0" />
@@ -60,17 +51,21 @@
 
 <objects>
 	<sphere material="metal">
+		<color color="0.5 0.5 0.5" />
 		<center vector3="0.0 0.0 -4.0" />
 		<radius float="0.5" />
 		<texture string="./textures/iu.bmp" />
 	</sphere>
+
 	<sphere material="glass">
+		<color color="0.1 0.1 0.1" />
 		<center vector3="0.0 0.0 -2.0" />
 		<radius float="0.5" />
 		<texture string="" />
 	</sphere>
 
-	<sphere material="diffuse-white">
+	<sphere material="diffuse">
+		<color color="0.75 0.75 0.75" />
 		<center vector3="0.0 -1000.5 0.0" />
 		<radius float="1000" />
 		<texture string="" />
@@ -78,17 +73,18 @@
 </objects>
 
 <lights>
-	<pointlight>
-		<position vector3="-100.0 500.0 100.0" />
-		<color color="1.0 1.0 1.0" />
-		<ka float="0.4" />
-	</pointlight>
+	<arealight>
+        <center vector3="0.0 500.59 -1.5" />
+        <normal vector3="0.0 -1.0 0.0" />
+        <radius vector3="0.0 0.0 0.7" />
+        <color color="1.0 1.0 1.0" />
+        <ka float="0.6" />
+    </arealight>
 </lights>
 
 <integrator>
 	<path>
-		<depth-of-recursion int="50" />
-		<samples-per-pixel int="10" />
+		<depth-of-recursion int="1000" />
 	</path>
 </integrator>
 

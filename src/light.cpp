@@ -69,12 +69,20 @@ void point_light_t::print(std::ostream &stream) const
 	stream<<"Ambient Coefficient: "<<ka<<std::endl<<std::endl;
 }
 
-area_light_t::area_light_t(const Vector3f &_center, const Vector3f _normal, const Vector3f _radius, const Vector3f& _col, float _ka) {
+area_light_t::area_light_t(
+	const Vector3f &_center,
+	const Vector3f _normal,
+	const Vector3f _radius,
+	const Vector3f& _col,
+	float _ka,
+	int _num_shadowrays
+) {
 	center = _center;
 	normal = _normal.normalized();
 	radius = _radius;
 	col = _col;
 	ka = _ka;
+	num_shadowrays = _num_shadowrays;
 
   Vector3f w = normal;
   Vector3f v = radius.normalized();
@@ -100,9 +108,7 @@ color_t area_light_t::direct(const Vector3f& hitpt, const ray_t &view_ray, const
 {
 	Vector3f eps_hitpt = hitpt + EPSILON * normal;
 
-	int num_shadowrays = 1;
 	color_t total_shade(0.0, 0.0, 0.0);
-
 	for (int i = 0; i < num_shadowrays; ++i) {
 		Vector3f pos = sample_point();
 
@@ -125,15 +131,15 @@ color_t area_light_t::direct(const Vector3f& hitpt, const ray_t &view_ray, const
 
 		if (!found_intersection) {
 
-			float d = direction.norm();
+			// float d = direction.norm();
 			float cos = normal.dot(direction);
-			float attenuation = fmin(1, 1.0 / (1.0 + 0.001 * d + 0.0001 * d*d));
+			// float attenuation = fmin(1, 1.0 / (1.0 + 0.001 * d + 0.0001 * d*d));
 			Vector3f h = (-view_ray.direction + direction).normalized();
 
 			shade = mat->get_diffuse() * fmax(0.0, cos) +
 						  mat->get_specular() * pow(normal.dot(h), mat->get_shininess());
 
-			shade *= attenuation;
+			// shade *= attenuation;
 		}
 
 		total_shade += shade;
@@ -169,5 +175,6 @@ void area_light_t::print(std::ostream &stream) const
 	stream<<"Type: Point Light"<<std::endl;
 	stream<<"Center: "<<center.format(CommaInitFmt)<<std::endl;
 	stream<<"Color: "<<col.format(CommaInitFmt)<<std::endl;
-	stream<<"Ambient Coefficient: "<<ka<<std::endl<<std::endl;
+	stream<<"Ambient Coefficient: "<<ka<<std::endl;
+	stream<<"num_shadowrays: " << num_shadowrays << "\n\n";
 }

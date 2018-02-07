@@ -96,8 +96,14 @@ bool rayTriangleIntersect(
     // return true; // this ray hits the triangle
 }
 
-mesh_t::mesh_t(material_t* _mat, std::string file_name, Vector3f _center,
-      Vector3f _scale, Vector3f _rot) {
+mesh_t::mesh_t(
+  material_t* _mat,
+  const color_t &_color,
+  std::string file_name,
+  Vector3f _center,
+  Vector3f _scale,
+  Vector3f _rot
+): object_t(_mat, _color) {
 
   std::cout << file_name << "\n";
 
@@ -146,7 +152,7 @@ mesh_t::mesh_t(material_t* _mat, std::string file_name, Vector3f _center,
   transform = transform_t(trans_matrix * scale_matrix * rot_matrix);
   num_triangles = 0;
   this->center = _center;
-  mat = _mat;
+  // mat = _mat;
 
   std::vector<Vector3f> face;
 
@@ -185,6 +191,10 @@ mesh_t::mesh_t(material_t* _mat, std::string file_name, Vector3f _center,
   }
 
   std::cout << "preprocessing done.\n";
+}
+
+color_t mesh_t::get_color() const {
+  return color;
 }
 
 mesh_t::~mesh_t() {}

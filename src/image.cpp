@@ -45,7 +45,7 @@ color_t image_t::get_bgcolor(void) const {return bgcolor; }
 
 Eigen::Vector2f image_t::sample_pixel(unsigned int _x, unsigned int _y) const
 {
-	return Eigen::Vector2f(float(_x)/width, float(_y)/height);
+	return Eigen::Vector2f(float(_x + erand48())/width, float(_y + erand48())/height);
 }
 
 color_t image_t::get_pixel(unsigned int _x, unsigned int _y) const

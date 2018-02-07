@@ -27,7 +27,7 @@ namespace rt
     std::vector<triangle_t> triangles;
     int num_triangles;
 
-    material_t* mat;
+    // material_t* mat;
     // texture_t* tex;
 
     Vector3f center;
@@ -35,8 +35,14 @@ namespace rt
 
    public:
 
-    mesh_t(material_t* _mat, std::string file_name, Vector3f _center,
-      Vector3f _scale, Vector3f _rot);
+    mesh_t(
+      material_t* _mat,
+      const color_t &_color,
+      std::string file_name,
+      Vector3f _center,
+      Vector3f _scale,
+      Vector3f _rot);
+
     virtual ~mesh_t();
 
     /// Returns the mandatory object name
@@ -55,6 +61,8 @@ namespace rt
 
     /// Returns the material for the sphere.
     material_t* get_material(void) const;
+
+    color_t get_color() const;
 
     /// Prints information about the sphere. to stream.
     virtual void print(std::ostream &stream) const;

@@ -10,16 +10,14 @@ void rt::render(const scene_t* scn, std::string file_name)
   unsigned int w=scn->img->get_width();
   unsigned int h=scn->img->get_height();
 
-  // scn->cam->print(std::cout);
   int nspp = scn->img->get_nspp();
   float steps = w*h, step = 0;
 
-  for (int j = h-1; j >= 0; --j)
-  {
-    for (int i = 0; i < w; ++i)
-    {
+  for (int j = h-1; j >= 0; --j) {
+    for (int i = 0; i < w; ++i) {
       ray_t ray;
       color_t col(0.0);
+      Vector2f sample;
 
       fprintf(stderr,"\rRendering (%d nspp) %5.2f%%", nspp, 100.0 * step / steps);
       step += 1;
@@ -29,15 +27,15 @@ void rt::render(const scene_t* scn, std::string file_name)
         col += scn->intg->radiance(scn, ray, 0);
       } else {
         for (int s = 0; s < nspp; ++s) {
-          ray = scn->cam->get_ray(float(i + erand48())/float(w), float(j + erand48())/float(w));
+          sample = scn->img->sample_pixel(i, j);
+          ray = scn->cam->get_ray(sample.x(), sample.y());
+          // ray = scn->cam->get_ray(float(i + erand48())/float(w), float(j + erand48())/float(w));
           col += scn->intg->radiance(scn, ray, 0);
         }
         col /= nspp;
       }
-
       scn->img->set_pixel(i, j, col);
     }
-
     scn->img->write(file_name);
   }
 

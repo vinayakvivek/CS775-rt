@@ -125,12 +125,13 @@ namespace rt
 
 			Vector3f col;
 			float ka;
+      int num_shadowrays;
 
 			transform_t transform;
 
 		public:
 
-			area_light_t(const Vector3f &_center, const Vector3f _normal, const Vector3f _radius, const Vector3f& _col, float _ka);
+			area_light_t(const Vector3f &_center, const Vector3f _normal, const Vector3f _radius, const Vector3f& _col, float _ka, int _num_shadowrays);
 			virtual ~area_light_t() {}
 			virtual color_t direct(const Vector3f& hitpt, const ray_t &view_ray, const Vector3f& normal, const material_t* mat, const scene_t* scn) const;
 			/// Prints information about the light to the stream.
