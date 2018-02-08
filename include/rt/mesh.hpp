@@ -38,7 +38,8 @@ namespace rt
     mesh_t(
       material_t* _mat,
       const color_t &_color,
-      std::string file_name,
+      std::string texture_file,
+      std::string obj_file,
       Vector3f _center,
       Vector3f _scale,
       Vector3f _rot);

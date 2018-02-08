@@ -269,9 +269,14 @@ object_t* scene_t::parse_object_sphere(XMLElement* _elm, const std::list<materia
 }
 
 object_t* scene_t::parse_object_mesh(XMLElement* _elm, const std::list<material_t*>& matlist) {
+	XMLElement* subelm = _elm->FirstChildElement("texture");
+	std::string texture_file = "";
+	if (subelm)
+		texture_file = parse_parameter(subelm, "string");
 	return (object_t*)(new mesh_t(
 											find_material(parse_parameter(_elm, "material"),	matlist),
 											parse_color(_elm, "color"),
+											texture_file,
 											parse_property(_elm, "objfile", "string"),
 											parse_vector3(_elm,  "center"),
 											parse_vector3(_elm,  "scale"),

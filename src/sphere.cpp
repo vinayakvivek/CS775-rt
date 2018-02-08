@@ -58,12 +58,9 @@ Eigen::Vector3f sphere_t::get_normal(Eigen::Vector3f& _p) const
 }
 
 color_t sphere_t::get_texture(Vector3f &_p) const {
-	Vector3f p = _p.normalized();
+	Vector3f p = (_p - center).normalized();
 	float tx1 = atan2(p.x(), p.z()) / (2. * M_PI) + 0.5;
 	float ty1 = asin(p.y()) / M_PI + .5;
-	// float tx1 = asin(p.x()) / M_PI + 0.5;
-
-	// std::cout << tx1 << " " << ty1 << "\n";
 
 	return tex->get_color(tx1, ty1);
 }

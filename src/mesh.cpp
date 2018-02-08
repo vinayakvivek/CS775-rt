@@ -99,20 +99,24 @@ bool rayTriangleIntersect(
 mesh_t::mesh_t(
   material_t* _mat,
   const color_t &_color,
-  std::string file_name,
+    std::string texture_file,
+    std::string obj_file,
   Vector3f _center,
   Vector3f _scale,
   Vector3f _rot
 ): object_t(_mat, _color) {
 
-  std::cout << file_name << "\n";
+  std::cout << "texture: " << texture_file << "\n";
+  tex = new texture_t(texture_file);
+
+  std::cout << obj_file << "\n";
 
   tinyobj::attrib_t attrib;
   std::vector<tinyobj::shape_t> shapes;
   std::vector<tinyobj::material_t> materials;
 
   std::string err;
-  bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &err, file_name.c_str());
+  bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &err, obj_file.c_str());
 
   if (!err.empty()) { // `err` may contain warning message.
     std::cerr << err << std::endl;
@@ -234,8 +238,11 @@ Eigen::Vector3f mesh_t::get_normal(Eigen::Vector3f& _p) const {
 }
 
 color_t mesh_t::get_texture(Vector3f &_p) const {
-  color_t col(1.0, 1.0, 1.0);
-  return col;
+  Vector3f p = (_p - center).normalized();
+  float tx1 = atan2(p.x(), p.z()) / (2. * M_PI) + 0.5;
+  float ty1 = asin(p.y()) / M_PI + .5;
+
+  return tex->get_color(tx1, ty1);
 }
 
 material_t* mesh_t::get_material(void) const

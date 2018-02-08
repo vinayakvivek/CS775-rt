@@ -118,102 +118,102 @@ color_t whitted_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 	return d_col;
 }
 
-color_t path_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) const
-{
-	bool found_intersection=false;
-	std::vector<object_t*>::const_iterator oit;
-	hit_t hit, minhit;
+// color_t path_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) const
+// {
+// 	bool found_intersection=false;
+// 	std::vector<object_t*>::const_iterator oit;
+// 	hit_t hit, minhit;
 
-	for (oit=_scn->objs.begin(); oit!=_scn->objs.end(); oit++) {
-		if ((*oit)->intersect(hit, _ray)) {
-		  _ray.maxt = hit.t;
-		  minhit = hit;
-		  found_intersection = true;
-		}
-	}
+// 	for (oit=_scn->objs.begin(); oit!=_scn->objs.end(); oit++) {
+// 		if ((*oit)->intersect(hit, _ray)) {
+// 		  _ray.maxt = hit.t;
+// 		  minhit = hit;
+// 		  found_intersection = true;
+// 		}
+// 	}
 
-	if (!found_intersection) {
-		return _scn->img->get_bgcolor();
-	}
+// 	if (!found_intersection) {
+// 		return _scn->img->get_bgcolor();
+// 	}
 
-	Vector3f hitpt = _ray.origin + _ray.maxt * _ray.direction;
-	Vector3f normal = minhit.normal;
+// 	Vector3f hitpt = _ray.origin + _ray.maxt * _ray.direction;
+// 	Vector3f normal = minhit.normal;
 
-	color_t d_col(0.0);
-	bool found_light_intersection = false;
-	std::list<light_t*>::const_iterator lit;
-	light_hit_t lhit, minlhit;
+// 	color_t d_col(0.0);
+// 	bool found_light_intersection = false;
+// 	std::list<light_t*>::const_iterator lit;
+// 	light_hit_t lhit, minlhit;
 
-	for(lit=_scn->lits.begin(); lit!=_scn->lits.end(); lit++) {
-		if ((*lit)->intersect(lhit, _ray)) {
-			_ray.maxt = lhit.t;
-			minlhit = lhit;
-			found_light_intersection = true;
-		} else {
-			d_col += (*lit)->direct(hitpt, _ray, normal, minhit.obj->get_material(), _scn);
-		}
-	}
+// 	for(lit=_scn->lits.begin(); lit!=_scn->lits.end(); lit++) {
+// 		if ((*lit)->intersect(lhit, _ray)) {
+// 			_ray.maxt = lhit.t;
+// 			minlhit = lhit;
+// 			found_light_intersection = true;
+// 		} else {
+// 			d_col += (*lit)->direct(hitpt, _ray, normal, minhit.obj->get_material(), _scn);
+// 		}
+// 	}
 
-	if (found_light_intersection) {
-		return (minlhit.light->get_color());
-	}
+// 	if (found_light_intersection) {
+// 		return (minlhit.light->get_color());
+// 	}
 
-	if (d <= _scn->intg->depth) {
-		bool can_transmit = minhit.obj->get_material()->get_is_transmit();
-		bool can_reflect = minhit.obj->get_material()->get_is_reflect();
-		ray_t scattered_ray;
-		scattered_ray.origin = hitpt;
+// 	if (d <= _scn->intg->depth) {
+// 		bool can_transmit = minhit.obj->get_material()->get_is_transmit();
+// 		bool can_reflect = minhit.obj->get_material()->get_is_reflect();
+// 		ray_t scattered_ray;
+// 		scattered_ray.origin = hitpt;
 
-		double fuzz = 0.05;
+// 		double fuzz = 0.05;
 
-		if (can_transmit && can_reflect) {
-			float cosine = _ray.direction.dot(normal);
-			float ni_over_nt;
-			float eta = minhit.obj->get_material()->get_eta();
+// 		if (can_transmit && can_reflect) {
+// 			float cosine = _ray.direction.dot(normal);
+// 			float ni_over_nt;
+// 			float eta = minhit.obj->get_material()->get_eta();
 
-	    if (cosine > 0) {
-	      normal = -normal;
-	      ni_over_nt = eta;
-	      cosine = eta * cosine;
-	    } else {
-	      ni_over_nt = 1.0 / eta;
-	      cosine = -cosine;
-	    }
+// 	    if (cosine > 0) {
+// 	      normal = -normal;
+// 	      ni_over_nt = eta;
+// 	      cosine = eta * cosine;
+// 	    } else {
+// 	      ni_over_nt = 1.0 / eta;
+// 	      cosine = -cosine;
+// 	    }
 
-	    //schlick(cosine, eta) < erand48()
-			if (schlick(cosine, eta) < erand48() && refract(_ray, normal, ni_over_nt, scattered_ray)) {
-				// refract
-				d_col += _scn->intg->radiance(_scn, scattered_ray, d + 1);
-			} else {
-				// total internal reflection
-				reflect(_ray, normal, scattered_ray);
-				d_col += _scn->intg->radiance(_scn, scattered_ray, d + 1);
-			}
+// 	    //schlick(cosine, eta) < erand48()
+// 			if (schlick(cosine, eta) < erand48() && refract(_ray, normal, ni_over_nt, scattered_ray)) {
+// 				// refract
+// 				d_col += _scn->intg->radiance(_scn, scattered_ray, d + 1);
+// 			} else {
+// 				// total internal reflection
+// 				reflect(_ray, normal, scattered_ray);
+// 				d_col += _scn->intg->radiance(_scn, scattered_ray, d + 1);
+// 			}
 
-		} else if (can_reflect) {
+// 		} else if (can_reflect) {
 
-			// scattered_ray.origin += normal * EPSILON;
+// 			// scattered_ray.origin += normal * EPSILON;
 
-			// reflection only
-			reflect(_ray, normal, scattered_ray);
-			scattered_ray.direction = (scattered_ray.direction + fuzz * randomInUnitSphere()).normalized();
-			d_col += _scn->intg->radiance(_scn, scattered_ray, d + 1);
+// 			// reflection only
+// 			reflect(_ray, normal, scattered_ray);
+// 			scattered_ray.direction = (scattered_ray.direction + fuzz * randomInUnitSphere()).normalized();
+// 			d_col += _scn->intg->radiance(_scn, scattered_ray, d + 1);
 
-		} else {
+// 		} else {
 
-			// scattered_ray.origin -= normal * 0.001;
-			scattered_ray.origin += normal * EPSILON;
+// 			// scattered_ray.origin -= normal * 0.001;
+// 			scattered_ray.origin += normal * EPSILON;
 
-			scattered_ray.direction = (normal + randomInUnitSphere()).normalized();
-			d_col += 0.3 * _scn->intg->radiance(_scn, scattered_ray, d + 1);
-		}
-	}
+// 			scattered_ray.direction = (normal + randomInUnitSphere()).normalized();
+// 			d_col += 0.3 * _scn->intg->radiance(_scn, scattered_ray, d + 1);
+// 		}
+// 	}
 
-	d_col *= minhit.obj->get_texture(normal);
-	return d_col;
-}
+// 	d_col *= minhit.obj->get_texture(normal);
+// 	return d_col;
+// }
 
-color_t smallpt_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) const {
+color_t path_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) const {
 
 	if (d >= _scn->intg->depth) {
 		return _scn->img->get_bgcolor();
@@ -267,7 +267,7 @@ color_t smallpt_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 			return _scn->img->get_bgcolor();
 	}
 
-	f = f * minhit.obj->get_texture(nl);
+	f = f * minhit.obj->get_texture(hitpt);
 
 	for(lit=_scn->lits.begin(); lit!=_scn->lits.end(); lit++) {
 		d_col += 0.2 * f * (*lit)->direct(hitpt, _ray, nl, minhit.obj->get_material(), _scn);
@@ -342,4 +342,9 @@ color_t smallpt_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 	}
 
 	return _scn->img->get_bgcolor();
+}
+
+
+color_t smallpt_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) const {
+	return color_t(0.0, 0.0, 0.0);
 }
