@@ -286,10 +286,20 @@ color_t smallpt_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 
 	} else if (can_reflect && !can_transmit) {
 		// SPECULAR
+		double fuzz = 0.1;
+
 		ray_t reflected_ray;
 		reflected_ray.origin = hitpt;
 		reflect(_ray, n, reflected_ray);
-		d_col += f * _scn->intg->radiance(_scn, reflected_ray, d+1);
+
+		Vector3f specular_dir = (reflected_ray.direction + fuzz * randomInUnitSphere()).normalized();
+		double cosa = specular_dir.dot(reflected_ray.direction);
+		float shininess = minhit.obj->get_material()->get_shininess();
+		color_t specular = minhit.obj->get_material()->get_specular();
+
+		reflected_ray.direction = specular_dir;
+
+		d_col += f * specular * pow(cosa, shininess) * _scn->intg->radiance(_scn, reflected_ray, d+1);
 		return d_col;
 
 	} else {
