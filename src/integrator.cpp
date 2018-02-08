@@ -290,7 +290,7 @@ color_t smallpt_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) 
 
 		ray_t reflected_ray;
 		reflected_ray.origin = hitpt;
-		reflect(_ray, n, reflected_ray);
+		reflect(_ray, nl, reflected_ray);
 
 		Vector3f specular_dir = (reflected_ray.direction + fuzz * randomInUnitSphere()).normalized();
 		double cosa = specular_dir.dot(reflected_ray.direction);
