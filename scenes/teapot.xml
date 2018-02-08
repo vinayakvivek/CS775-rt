@@ -11,12 +11,12 @@
     <width float="600" />
     <height float="600" />
     <bgcolor color="0.0 0.0 0.0" />
-    <samples-per-pixel int="100" />
+    <samples-per-pixel int="500" />
 </image>
 
 <materials>
     <simplemat id="diffuse">
-        <diffuse color="0.5 0.5 0.5" />
+        <diffuse color="0.7 0.7 0.7" />
         <specular color="0.0 0.0 0.0" />
         <reflect color="0.0 0.0 0.0" />
         <transmit color="0.0 0.0 0.0" />
@@ -32,7 +32,7 @@
         <reflect color="1.0 1.0 1.0" />
         <transmit color="0.0 0.0 0.0" />
         <eta float="0.0"/>
-        <n float="100" />
+        <n float="10" />
         <isreflect bool="true"/>
         <istransmit bool="false"/>
     </simplemat>
@@ -51,9 +51,9 @@
 
 <objects>
 
-    <mesh material="diffuse">
-        <color color="0.9 0.4 0.8" />
-        <center vector3="0.5 0.2 -2.0" />
+    <mesh material="metal">
+        <color color="0.3 0.6 0.8" />
+        <center vector3="0.5 0.2 -3.0" />
         <objfile string="./objs/teapot.obj" />
         <scale vector3="0.01 0.01 0.01" />
         <rotation vector3="0.0 15.0 0.0" />
@@ -110,7 +110,7 @@
         <radius vector3="0.0 0.0 0.7" />
         <color color="1.5 1.5 1.5" />
         <ka float="0.6" />
-        <numshadowrays int="1" />
+        <numshadowrays int="10" />
     </arealight>
 </lights>
 
