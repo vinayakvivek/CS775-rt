@@ -11,7 +11,7 @@
     <width float="600" />
     <height float="600" />
     <bgcolor color="0.0 0.0 0.0" />
-    <samples-per-pixel int="10" />
+    <samples-per-pixel int="1" />
 </image>
 
 <materials>
@@ -110,10 +110,16 @@
         <center vector3="0.0 2.59 -1.5" />
         <normal vector3="0.0 -1.0 0.0" />
         <radius vector3="0.0 0.0 0.7" />
-        <color color="1.5 1.5 1.5" />
+        <color color="5.0 5.0 5.0" />
         <ka float="0.6" />
         <numshadowrays int="10" />
     </arealight>
+
+   <!--  <pointlight>
+        <position vector3="0.0 2.5 -1.5" />
+        <color color="3.0 3.0 3.0" />
+        <ka float="0.6" />
+    </pointlight> -->
 </lights>
 
 <integrator>

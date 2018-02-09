@@ -54,12 +54,19 @@ namespace rt
 	 **/
 	class light_t
 	{
-	private:
+	protected:
+
+    /// Color of the light. This can be thought of as radiance emitted by the light source.
+    Vector3f col;
+    /// An ambient coefficient. Modulate col with ka to get ambient component of illumination.
+    float ka;
+    /// number of shadowrays
+    int num_shadowrays;
 
 	public:
 
 		/// Constructor
-		light_t();
+		light_t(const Vector3f& _col, const float _ka, int _nshadowrays = 1);
 
 		/// Destructon
 		virtual ~light_t();
@@ -69,7 +76,9 @@ namespace rt
 		* Scene is passed so that the camera position, and the objects can be used for computing the specular component
 		* of direct illumination and the shadow computations.
 		**/
-		virtual color_t direct(const Vector3f& hitpt, const ray_t &view_ray, const Vector3f& normal, const material_t* mat, const scene_t* scn) const = 0;
+		color_t direct(const Vector3f& hitpt, const ray_t &view_ray, const Vector3f& normal, const material_t* mat, const scene_t* scn) const;
+
+    virtual Vector3f sample_point() const = 0;
 
 		virtual bool intersect(light_hit_t& result, const ray_t& _ray) const = 0;
 
@@ -88,15 +97,12 @@ namespace rt
 	private:
 		/// Position of the light
 		Vector3f pos;
-		/// Color of the light. This can be thought of as radiance emitted by the light source.
-		Vector3f col;
-		/// An ambient coefficient. Modulate col with ka to get ambient component of illumination.
-		float ka;
 
 	public:
 		/// Constructor
 		point_light_t(const Vector3f& _pos, const Vector3f& _col, const float _ka);
-		/// Destructor
+
+    /// Destructor
 		virtual ~point_light_t();
 
 		/**
@@ -104,11 +110,13 @@ namespace rt
 		* Scene is passed so that the camera position, and the objects can be used for computing the specular component
 		* of direct illumination and the shadow computations.
 		**/
-		virtual color_t direct(const Vector3f& hitpt, const ray_t &view_ray, const Vector3f& normal, const material_t* mat, const scene_t* scn) const;
+		// virtual color_t direct(const Vector3f& hitpt, const ray_t &view_ray, const Vector3f& normal, const material_t* mat, const scene_t* scn) const;
 
 		virtual bool intersect(light_hit_t& result, const ray_t& _ray) const {
 			return false;
 		}
+
+    virtual Vector3f sample_point() const;
 
 		virtual color_t get_color() const {return color_t(col.x(), col.y(), col.z());}
 		virtual float get_ka() const {return ka;}
@@ -123,21 +131,19 @@ namespace rt
 			Vector3f normal;
 			Vector3f radius;
 
-			Vector3f col;
-			float ka;
-      int num_shadowrays;
-
 			transform_t transform;
 
 		public:
 
 			area_light_t(const Vector3f &_center, const Vector3f _normal, const Vector3f _radius, const Vector3f& _col, float _ka, int _num_shadowrays);
 			virtual ~area_light_t() {}
-			virtual color_t direct(const Vector3f& hitpt, const ray_t &view_ray, const Vector3f& normal, const material_t* mat, const scene_t* scn) const;
-			/// Prints information about the light to the stream.
+
+    	// virtual color_t direct(const Vector3f& hitpt, const ray_t &view_ray, const Vector3f& normal, const material_t* mat, const scene_t* scn) const;
+
+      /// Prints information about the light to the stream.
 			virtual void print(std::ostream &stream) const;
 
-			Vector3f sample_point() const ;
+			virtual Vector3f sample_point() const;
 			virtual bool intersect(light_hit_t& result, const ray_t& _ray) const;
 
 			virtual color_t get_color() const {return color_t(col.x(), col.y(), col.z());}
