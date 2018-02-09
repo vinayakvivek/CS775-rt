@@ -182,7 +182,6 @@ bool rect_light_t::intersect(light_hit_t& result, const ray_t& _ray) const {
 	float t = - (normal.dot(_ray.origin) + D) / normal.dot(_ray.direction);
 
 	float curr_t = _ray.maxt;
-  float u, v;
 
   Vector3f v0 = center + a - b;
   Vector3f v1 = center + a + b;
@@ -190,7 +189,8 @@ bool rect_light_t::intersect(light_hit_t& result, const ray_t& _ray) const {
   Vector3f v4 = center - a - b;
 
   bool found_intersection = false;
-  if (_ray.rayTriangleIntersect(v0, v1, v2, t, u, v) || _ray.rayTriangleIntersect(v0, v2, v4, t, u, v)) {
+  triangle_t A(v0, v1, v2), B(v0, v2, v4);
+  if (A.intersect(_ray, t) || B.intersect(_ray, t)) {
   	if (t < curr_t && t > _ray.mint) {
       curr_t = t;
       found_intersection = true;

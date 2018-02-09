@@ -11,7 +11,7 @@
     <width float="600" />
     <height float="600" />
     <bgcolor color="0.0 0.0 0.0" />
-    <samples-per-pixel int="1" />
+    <samples-per-pixel int="10" />
 </image>
 
 <materials>
@@ -50,33 +50,20 @@
 </materials>
 
 <objects>
-    <!-- <sphere material="diffuse">
-        <color color="0.75 0.25 0.25" />
-        <center vector3="0.8 0.0 -1.5" />
-        <radius float="0.5" />
-        <texture string="" />
-    </sphere> -->
-
-    <!-- <mesh material="metal">
-        <center vector3="0.0 0.5 -1.0" />
-        <objfile string="./objs/teapot.obj" />
-        <scale vector3="0.01 0.01 0.01" />
-        <rotation vector3="30.0 90.0 0.0" />
-    </mesh> -->
 
     <sphere material="metal">
-        <color color="0.999 0.999 0.999" />
-        <center vector3="0.8 0.0 -3.0" />
+        <color color="1.0 1.0 1.0" />
+        <center vector3="0.0 0.2 -3.0" />
         <radius float="0.6" />
         <texture string="./textures/iu.bmp" />
     </sphere>
 
     <mesh material="glass">
-        <color color="0.999 0.999 0.999" />
-        <center vector3="-0.5 0.2 -2.0" />
+        <color color="1.0 1.0 1.0" />
+        <center vector3="0.0 0.2 -1.0" />
         <objfile string="./objs/dodecahedron.obj" />
-        <scale vector3="0.8 0.8 0.8" />
-        <rotation vector3="0.0 15.0 0.0" />
+        <scale vector3="0.7 0.7 0.7" />
+        <rotation vector3="0.0 30.0 0.0" />
     </mesh>
 
     <!-- back -->

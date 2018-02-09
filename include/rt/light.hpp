@@ -28,6 +28,7 @@
 #include <scene.hpp>
 #include <utils.hpp>
 #include <object.hpp>
+#include <mesh.hpp>
 
 namespace rt
 {

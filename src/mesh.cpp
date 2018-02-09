@@ -3,13 +3,83 @@
 
 using namespace rt;
 
+const float kEpsilon = 1e-8;
 
+bool triangle_t::intersect(const ray_t &ray, float &t) const {
+  Vector3f AB = B - A;
+  Vector3f AC = C - A;
+
+  float u, v;
+
+  Vector3f pvec = ray.direction.cross(AC);
+  float det = AB.dot(pvec);
+
+  // if the determinant is negative the triangle is backfacing
+  // if the determinant is close to 0, the ray misses the triangle
+  if (det < kEpsilon) return false;
+
+  // ray and triangle are parallel if det is close to 0
+  if (fabs(det) < kEpsilon) return false;
+
+  float invDet = 1 / det;
+
+  Vector3f tvec = ray.origin - A;
+  u = tvec.dot(pvec) * invDet;
+  if (u < 0 || u > 1) return false;
+
+  Vector3f qvec = tvec.cross(AB);
+  v = ray.direction.dot(qvec) * invDet;
+  if (v < 0 || u + v > 1) return false;
+
+  t = AC.dot(qvec) * invDet;
+
+  return true;
+}
+
+bool plane_t::intersect(const ray_t &ray, float &t, bool &entering) const {
+  double denom = N.dot(ray.direction);
+  if (fabs(denom) < kEpsilon) return false;
+
+  entering = (denom < 0);
+  t = -(N.dot(ray.origin) + D) / denom;
+  return true;
+}
+
+bounding_box_t::bounding_box_t(
+  const Vector3f &rft,  // right-front-top
+  const Vector3f &lbb   // left-back-bottom
+) {
+  faces[0] = plane_t(Vector3f(1.0, 0.0, 0.0), rft);  // front
+  faces[1] = plane_t(Vector3f(-1.0, 0.0, 0.0), lbb);  // back
+
+  faces[2] = plane_t(Vector3f(0.0, 1.0, 0.0), rft);  // top
+  faces[3] = plane_t(Vector3f(0.0, -1.0, 0.0), lbb);  // bottom
+
+  faces[4] = plane_t(Vector3f(0.0, 0.0, 1.0), rft);  // right
+  faces[5] = plane_t(Vector3f(0.0, 0.0, -1.0), lbb);  // left
+}
+
+bool bounding_box_t::intersect(const ray_t &ray, float &t) const {
+  float te = kEpsilon, tl = std::numeric_limits<float>::infinity();
+  bool is_entering = false;
+
+  for (int i = 0; i < 6; ++i) {
+    if (faces[i].intersect(ray, t, is_entering)) {
+      if (is_entering) te = fmax(te, t);
+      else tl = fmin(tl, t);
+    }
+  }
+
+  if (te > tl) return false;
+
+  return te > ray.mint && te < ray.maxt;
+}
 
 mesh_t::mesh_t(
   material_t* _mat,
   const color_t &_color,
-    std::string texture_file,
-    std::string obj_file,
+  std::string texture_file,
+  std::string obj_file,
   Vector3f _center,
   Vector3f _scale,
   Vector3f _rot
@@ -61,6 +131,8 @@ mesh_t::mesh_t(
       AngleAxisf(_rot.x(), Vector3f::UnitZ());
   rot_matrix.topLeftCorner<3,3>() = m;
 
+  Vector3f rft(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+  Vector3f lbb(std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity(), std::numeric_limits<float>::infinity());
 
   transform = transform_t(trans_matrix * scale_matrix * rot_matrix);
   num_triangles = 0;
@@ -85,7 +157,16 @@ mesh_t::mesh_t(
         float vx = attrib.vertices[3*idx.vertex_index+0];
         float vy = attrib.vertices[3*idx.vertex_index+1];
         float vz = attrib.vertices[3*idx.vertex_index+2];
-        face.push_back(transform.transform_point(Vector3f(vx, vy, vz)));
+        Vector3f t_point = transform.transform_point(Vector3f(vx, vy, vz));
+        face.push_back(t_point);
+
+        rft.x() = fmax(t_point.x(), rft.x());
+        rft.y() = fmax(t_point.y(), rft.y());
+        rft.z() = fmax(t_point.z(), rft.z());
+
+        lbb.x() = fmin(t_point.x(), lbb.x());
+        lbb.y() = fmin(t_point.y(), lbb.y());
+        lbb.z() = fmin(t_point.z(), lbb.z());
       }
       index_offset += fv;
 
@@ -101,6 +182,8 @@ mesh_t::mesh_t(
     }
   }
 
+  bounding_box = bounding_box_t(rft, lbb);
+
   std::cout << "preprocessing done.\n";
 }
 
@@ -113,18 +196,18 @@ mesh_t::~mesh_t() {}
 bool mesh_t::intersect(hit_t& result, const ray_t& _ray) const {
   float curr_t = _ray.maxt;
   Vector3f curr_normal;
-  float t, u, v;
-  Vector3f a, b;
+  float t;
 
   bool found_intersection = false;
 
-  for (triangle_t tri : triangles) {
-    if (_ray.rayTriangleIntersect(tri.A, tri.B, tri.C, t, u, v)) {
-      if (t < curr_t && t > _ray.mint) {
-        curr_t = t;
-        curr_normal = tri.N;
-        a = tri.A; b = tri.B;
-        found_intersection = true;
+  if (bounding_box.intersect(_ray, t)) {
+    for (triangle_t tri : triangles) {
+      if (tri.intersect(_ray, t)) {
+        if (t < curr_t && t > _ray.mint) {
+          curr_t = t;
+          curr_normal = tri.N;
+          found_intersection = true;
+        }
       }
     }
   }

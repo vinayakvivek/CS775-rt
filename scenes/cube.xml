@@ -11,7 +11,7 @@
     <width float="600" />
     <height float="600" />
     <bgcolor color="0.0 0.0 0.0" />
-    <samples-per-pixel int="1" />
+    <samples-per-pixel int="10" />
 </image>
 
 <materials>

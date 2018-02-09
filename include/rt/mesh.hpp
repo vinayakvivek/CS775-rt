@@ -17,8 +17,31 @@ namespace rt
     triangle_t() {}
     triangle_t(const Vector3f &a, const Vector3f &b, const Vector3f &c) {
       A = a; B = b; C = c;
-      N = -((B-A).cross(C-B)).normalized();
+      N = ((B-A).cross(C-A)).normalized();
     }
+    bool intersect(const ray_t &ray, float &t) const;
+  };
+
+  struct plane_t {
+    // Ax + By + Cz + D = 0
+    Vector3f N;  // normal (A, B, C)
+    float D;
+    plane_t() {}
+    plane_t(const Vector3f &n, const Vector3f &p) {
+      N = n.normalized();
+      D = -N.dot(p);
+    }
+    bool intersect(const ray_t &ray, float &t, bool &entering) const;
+  };
+
+  struct bounding_box_t {
+    plane_t faces[6];
+    bounding_box_t() {}
+    bounding_box_t(
+      const Vector3f &rft,  // right-front-top
+      const Vector3f &lbb   // left-back-bottom)
+    );
+    bool intersect(const ray_t &ray, float &t) const;
   };
 
   class mesh_t : public object_t {
@@ -27,10 +50,8 @@ namespace rt
     std::vector<triangle_t> triangles;
     int num_triangles;
 
-    // material_t* mat;
-    // texture_t* tex;
-
     Vector3f center;
+    bounding_box_t bounding_box;
     transform_t transform;
 
    public:
