@@ -13,13 +13,18 @@ namespace rt
 {
   struct triangle_t {
     Vector3f A, B, C;
+    Vector3f nA, nB, nC;
     Vector3f N;
     triangle_t() {}
     triangle_t(const Vector3f &a, const Vector3f &b, const Vector3f &c) {
       A = a; B = b; C = c;
       N = ((B-A).cross(C-A)).normalized();
+      nA = nB = nC = N;
     }
-    bool intersect(const ray_t &ray, float &t) const;
+    triangle_t(
+      const Vector3f &a, const Vector3f &b, const Vector3f &c,
+      const Vector3f &na, const Vector3f &nb, const Vector3f &nc);
+    bool intersect(const ray_t &ray, float &t, Vector3f &normal) const;
   };
 
   struct plane_t {

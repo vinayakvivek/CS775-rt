@@ -10,13 +10,13 @@
 <image>
     <width float="600" />
     <height float="600" />
-    <bgcolor color="0.25 0.25 0.75" />
-    <samples-per-pixel int="10" />
+    <bgcolor color="0.0 0.0 0.0" />
+    <samples-per-pixel int="100" />
 </image>
 
 <materials>
     <simplemat id="diffuse">
-        <diffuse color="0.5 0.5 0.5" />
+        <diffuse color="0.7 0.7 0.7" />
         <specular color="0.0 0.0 0.0" />
         <reflect color="0.0 0.0 0.0" />
         <transmit color="0.0 0.0 0.0" />
@@ -28,11 +28,11 @@
 
     <simplemat id="metal">
         <diffuse color="0.0 0.0 0.0" />
-        <specular color="0.0 0.0 0.0" />
+        <specular color="1.0 1.0 1.0" />
         <reflect color="1.0 1.0 1.0" />
         <transmit color="0.0 0.0 0.0" />
         <eta float="0.0"/>
-        <n float="100" />
+        <n float="10" />
         <isreflect bool="true"/>
         <istransmit bool="false"/>
     </simplemat>
@@ -50,47 +50,83 @@
 </materials>
 
 <objects>
-    <sphere material="metal">
-        <color color="0.999 0.5 0.999" />
-        <center vector3="0.8 0.0 -3.0" />
-        <radius float="0.6" />
-        <texture string="./textures/iu.bmp" />
-    </sphere>
 
-    <sphere material="glass">
-        <color color="0.999 0.999 0.999" />
-        <center vector3="-0.8 0.0 -2.0" />
-        <radius float="0.6" />
-    </sphere>
+    <!-- <mesh material="diffuse">
+        <color color="0.7 0.8 0.3" />
+        <center vector3="0.5 0.1 -2.0" />
+        <objfile string="./objs/teapot.obj" />
+        <scale vector3="0.01 0.01 0.01" />
+        <rotation vector3="0.0 15.0 0.0" />
+    </mesh> -->
 
-    <!-- bottom -->
+    <mesh material="metal">
+        <color color="1.0 1.0 1.0" />
+        <center vector3="0.5 0.9 -2.0" />
+        <objfile string="./objs/gourd.obj" />
+        <scale vector3="0.75 0.75 0.75" />
+        <rotation vector3="0.0 0.2 0.0" />
+        <showbbox bool="false" />
+    </mesh>
+
+    <!-- back -->
     <sphere material="diffuse">
-        <color color=".75 .25 .25" />
+        <color color=".75 .75 .75" />
         <center vector3="0.0 -1000.6 0.0" />
         <radius float="1000" />
     </sphere>
+
+    <!-- top -->
+    <sphere material="diffuse">
+        <color color=".8 .2 .75" />
+        <center vector3="0.0 1002.6 0.0" />
+        <radius float="1000" />
+    </sphere>
+
+    <!-- back -->
+    <sphere material="diffuse">
+        <color color="0.0 0.0 0.0" />
+        <center vector3="0.0 0.0 1004.6" />
+        <radius float="1000" />
+    </sphere>
+
+    <!-- front -->
+    <sphere material="diffuse">
+        <color color="0.3 0.75 0.5" />
+        <center vector3="0.0 0.0 -1005.0" />
+        <radius float="1000" />
+    </sphere>
+
+    <!-- left -->
+    <sphere material="diffuse">
+        <color color=".75 .25 .25" />
+        <center vector3="1001.8 0.0 0.0" />
+        <radius float="1000" />
+    </sphere>
+
+    <!-- right -->
+    <sphere material="diffuse">
+        <color color=".25 .25 .75" />
+        <center vector3="-1001.8 0.0 0.0" />
+        <radius float="1000" />
+    </sphere>
+
 </objects>
 
 <lights>
-    <!-- <arealight>
-        <center vector3="0.0 1.59 -1.5" />
+    <arealight>
+        <center vector3="0.0 2.59 -1.5" />
         <normal vector3="0.0 -1.0 0.0" />
         <radius vector3="0.0 0.0 0.7" />
-        <color color="1.0 1.0 1.0" />
+        <color color="1.5 1.5 1.5" />
         <ka float="0.6" />
-    </arealight> -->
-
-    <pointlight>
-        <position vector3="-100.0 500.0 100.0" />
-        <color color="1.0 1.0 1.0" />
-        <ka float="0.4" />
-    </pointlight>
+        <numshadowrays int="10" />
+    </arealight>
 </lights>
 
 <integrator>
-    <smallpt>
+    <path>
         <depth-of-recursion int="1000" />
-    </smallpt>
+    </path>
 </integrator>
 
 </rt-scene>

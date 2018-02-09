@@ -187,10 +187,11 @@ bool rect_light_t::intersect(light_hit_t& result, const ray_t& _ray) const {
   Vector3f v1 = center + a + b;
   Vector3f v2 = center - a + b;
   Vector3f v4 = center - a - b;
+  Vector3f curr_normal;
 
   bool found_intersection = false;
   triangle_t A(v0, v1, v2), B(v0, v2, v4);
-  if (A.intersect(_ray, t) || B.intersect(_ray, t)) {
+  if (A.intersect(_ray, t, curr_normal) || B.intersect(_ray, t, curr_normal)) {
   	if (t < curr_t && t > _ray.mint) {
       curr_t = t;
       found_intersection = true;

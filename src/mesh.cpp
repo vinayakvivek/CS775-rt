@@ -5,7 +5,16 @@ using namespace rt;
 
 const float kEpsilon = 1e-8;
 
-bool triangle_t::intersect(const ray_t &ray, float &t) const {
+triangle_t::triangle_t(
+  const Vector3f &a, const Vector3f &b, const Vector3f &c,
+  const Vector3f &na, const Vector3f &nb, const Vector3f &nc
+) {
+  A = a; B = b; C = c;
+  N = ((B-A).cross(C-A)).normalized();
+  nA = na; nB = nb; nC = nc;
+}
+
+bool triangle_t::intersect(const ray_t &ray, float &t, Vector3f &normal) const {
   Vector3f AB = B - A;
   Vector3f AC = C - A;
 
@@ -32,6 +41,8 @@ bool triangle_t::intersect(const ray_t &ray, float &t) const {
   if (v < 0 || u + v > 1) return false;
 
   t = AC.dot(qvec) * invDet;
+
+  normal = (u*nA + v*nB + (1-u-v)*nC).normalized();
 
   return true;
 }
@@ -91,6 +102,7 @@ bool bounding_box_t::intersect(const ray_t &ray, float &t) const {
 
   if (te > tl) return false;
 
+  t = te;
   return te > ray.mint && te < ray.maxt;
 }
 
@@ -161,6 +173,7 @@ mesh_t::mesh_t(
   // mat = _mat;
 
   std::vector<Vector3f> face;
+  std::vector<Vector3f> v_normals;
 
   // Loop over shapes
   for (size_t s = 0; s < shapes.size(); s++) {
@@ -170,6 +183,7 @@ mesh_t::mesh_t(
 
       int fv = shapes[s].mesh.num_face_vertices[f];
       face.resize(0);
+      v_normals.resize(0);
 
       // Loop over vertices in the face.
       for (int v = 0; v < fv; v++) {
@@ -180,6 +194,12 @@ mesh_t::mesh_t(
         float vz = attrib.vertices[3*idx.vertex_index+2];
         Vector3f t_point = transform.transform_point(Vector3f(vx, vy, vz));
         face.push_back(t_point);
+
+        // float nx = attrib.normals[3*idx.normal_index+0];
+        // float ny = attrib.normals[3*idx.normal_index+1];
+        // float nz = attrib.normals[3*idx.normal_index+2];
+        // Vector3f t_normal = transform.transform_normal(Vector3f(nx, ny, nz)).normalized();
+        // v_normals.push_back(t_normal);
 
         rft.x() = fmax(vx, rft.x());
         rft.y() = fmax(vy, rft.y());
@@ -194,6 +214,7 @@ mesh_t::mesh_t(
       for (int v = 0; v < fv-2; ++v) {
         triangles.push_back(triangle_t(
             face[0], face[v+1], face[v+2]
+            // v_normals[0], v_normals[v+1], v_normals[v+2]
           ));
         num_triangles++;
       }
@@ -214,22 +235,21 @@ color_t mesh_t::get_color() const {
 mesh_t::~mesh_t() {}
 
 bool mesh_t::intersect(hit_t& result, const ray_t& _ray) const {
-  float curr_t = _ray.maxt;
-  Vector3f curr_normal = Vector3f(0.0, 1.0, 0.0);
-  float t;
+  float t, curr_t = _ray.maxt;
+  Vector3f normal, curr_normal = Vector3f(0.0, 1.0, 0.0);
 
   bool found_intersection = false;
 
-  if (bounding_box.intersect(_ray, t)) {
+  if (bounding_box.intersect(_ray, t) && t < curr_t) {
     if (show_bounding_box) {
       found_intersection = true;
       curr_t = t;
     } else {
       for (triangle_t tri : triangles) {
-        if (tri.intersect(_ray, t)) {
+        if (tri.intersect(_ray, t, normal)) {
           if (t < curr_t && t > _ray.mint) {
             curr_t = t;
-            curr_normal = tri.N;
+            curr_normal = normal;
             found_intersection = true;
           }
         }

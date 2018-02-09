@@ -185,7 +185,7 @@ color_t path_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) con
 		// DIFFUSE
     ray_t scattered_ray;
 		scattered_ray.origin = hitpt;
-   	scattered_ray.direction = (nl + randomInUnitSphere()).normalized();
+   	scattered_ray.direction = (n + randomInUnitSphere()).normalized();
     d_col += f * _scn->intg->radiance(_scn, scattered_ray, d+1);
     return d_col;
 
@@ -195,7 +195,7 @@ color_t path_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) con
 
 		ray_t reflected_ray;
 		reflected_ray.origin = hitpt;
-		reflect(_ray, nl, reflected_ray);
+		reflect(_ray, n, reflected_ray);
 
 		Vector3f specular_dir = (reflected_ray.direction + fuzz * randomInUnitSphere()).normalized();
 		double cosa = specular_dir.dot(reflected_ray.direction);

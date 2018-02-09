@@ -11,7 +11,7 @@
     <width float="600" />
     <height float="600" />
     <bgcolor color="0.0 0.0 0.0" />
-    <samples-per-pixel int="10" />
+    <samples-per-pixel int="1" />
 </image>
 
 <materials>
@@ -61,10 +61,11 @@
 
     <mesh material="metal">
         <color color="1.0 1.0 1.0" />
-        <center vector3="0.5 0.1 -2.0" />
-        <objfile string="./objs/teapot.obj" />
-        <scale vector3="0.01 0.01 0.01" />
-        <rotation vector3="0.0 15.0 0.0" />
+        <center vector3="0.0 0.5 -2.0" />
+        <objfile string="./objs/teapot2.obj" />
+        <scale vector3="0.07 0.07 0.07" />
+        <rotation vector3="-0.3 -0.7 0.0" />
+        <showbbox bool="false" />
     </mesh>
 
     <!-- back -->

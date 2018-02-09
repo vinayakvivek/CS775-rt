@@ -11,7 +11,7 @@
     <width float="600" />
     <height float="600" />
     <bgcolor color="0.0 0.0 0.0" />
-    <samples-per-pixel int="10" />
+    <samples-per-pixel int="1" />
 </image>
 
 <materials>
@@ -51,19 +51,20 @@
 
 <objects>
 
-    <sphere material="metal">
+    <!-- <sphere material="metal">
         <color color="1.0 1.0 1.0" />
         <center vector3="0.0 0.2 -3.0" />
         <radius float="0.6" />
         <texture string="./textures/iu.bmp" />
-    </sphere>
+    </sphere> -->
 
-    <mesh material="glass">
+    <mesh material="metal">
         <color color="1.0 1.0 1.0" />
         <center vector3="0.0 0.2 -1.0" />
         <objfile string="./objs/dodecahedron.obj" />
         <scale vector3="0.7 0.7 0.7" />
-        <rotation vector3="0.0 30.0 0.0" />
+        <rotation vector3="0.0 0.5 0.0" />
+        <showbbox bool="false" />
     </mesh>
 
     <!-- back -->
