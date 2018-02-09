@@ -140,3 +140,81 @@ void area_light_t::print(std::ostream &stream) const
 	stream<<"Ambient Coefficient: "<<ka<<std::endl;
 	stream<<"num_shadowrays: " << num_shadowrays << "\n\n";
 }
+
+// rect-light ------------------------
+
+
+rect_light_t::rect_light_t(
+  const Vector3f &_center,
+  const Vector3f _normal,
+  const Vector3f _a,
+  const Vector3f _b,
+  const Vector3f& _col,
+  float _ka,
+  int _num_shadowrays
+): light_t(_col, _ka, _num_shadowrays) {
+
+	center = _center;
+	normal = _normal.normalized();
+	a = _a;
+	b = _b;
+
+	Vector3f w = normal;
+  Vector3f v = a.normalized();
+  Vector3f u = v.cross(w);
+
+  Matrix4f to_light_coords;
+  to_light_coords <<
+  	u.x(), u.y(), u.z(), -center.dot(u),
+  	v.x(), v.y(), v.z(), -center.dot(v),
+  	w.x(), w.y(), w.z(), -center.dot(w),
+  	0.0,   0.0,   0.0,   1.0;
+
+  transform = transform_t(to_light_coords.inverse());
+}
+
+Vector3f rect_light_t::sample_point() const {
+	return transform.transform_point((2*erand48() - 1)*a + (2*erand48() - 1)*b);
+}
+
+bool rect_light_t::intersect(light_hit_t& result, const ray_t& _ray) const {
+	float D = -normal.dot(center);
+	float t = - (normal.dot(_ray.origin) + D) / normal.dot(_ray.direction);
+
+	float curr_t = _ray.maxt;
+  float u, v;
+
+  Vector3f v0 = center + a - b;
+  Vector3f v1 = center + a + b;
+  Vector3f v2 = center - a + b;
+  Vector3f v4 = center - a - b;
+
+  bool found_intersection = false;
+  if (_ray.rayTriangleIntersect(v0, v1, v2, t, u, v) || _ray.rayTriangleIntersect(v0, v2, v4, t, u, v)) {
+  	if (t < curr_t && t > _ray.mint) {
+      curr_t = t;
+      found_intersection = true;
+    }
+  }
+
+  if (found_intersection) {
+    result.light = this;
+    result.t = curr_t;
+    result.normal = normal;
+    return true;
+  }
+
+	return false;
+}
+
+void rect_light_t::print(std::ostream &stream) const
+{
+	Eigen::IOFormat CommaInitFmt(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", ", ", "", "", "[ ", " ]");
+
+	stream<<"Light Properties: -------------------------------"<<std::endl;
+	stream<<"Type: Point Light"<<std::endl;
+	stream<<"Center: "<<center.format(CommaInitFmt)<<std::endl;
+	stream<<"Color: "<<col.format(CommaInitFmt)<<std::endl;
+	stream<<"Ambient Coefficient: "<<ka<<std::endl;
+	stream<<"num_shadowrays: " << num_shadowrays << "\n\n";
+}

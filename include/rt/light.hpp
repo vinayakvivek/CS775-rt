@@ -118,7 +118,13 @@ namespace rt
 
 		public:
 
-			area_light_t(const Vector3f &_center, const Vector3f _normal, const Vector3f _radius, const Vector3f& _col, float _ka, int _num_shadowrays);
+			area_light_t(
+        const Vector3f &_center,
+        const Vector3f _normal,
+        const Vector3f _radius,
+        const Vector3f& _col,
+        float _ka,
+        int _num_shadowrays);
 			virtual ~area_light_t() {}
 
 			virtual Vector3f sample_point() const;
@@ -126,4 +132,30 @@ namespace rt
 
       virtual void print(std::ostream &stream) const;
 	};
+
+  class rect_light_t : public light_t
+  {
+      Vector3f center;
+      Vector3f normal;
+      Vector3f a, b;
+
+      transform_t transform;
+
+    public:
+
+      rect_light_t(
+        const Vector3f &_center,
+        const Vector3f _normal,
+        const Vector3f _a,
+        const Vector3f _b,
+        const Vector3f& _col,
+        float _ka,
+        int _num_shadowrays);
+      virtual ~rect_light_t() {}
+
+      virtual Vector3f sample_point() const;
+      virtual bool intersect(light_hit_t& result, const ray_t& _ray) const;
+
+      virtual void print(std::ostream &stream) const;
+  };
 }

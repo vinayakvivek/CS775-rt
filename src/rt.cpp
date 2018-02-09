@@ -13,14 +13,18 @@ void rt::render(const scene_t* scn, std::string file_name)
   int nspp = scn->img->get_nspp();
   float steps = w*h, step = 0;
 
+  // #pragma omp parallel for
   for (int j = h-1; j >= 0; --j) {
     for (int i = 0; i < w; ++i) {
       ray_t ray;
       color_t col(0.0);
       Vector2f sample;
 
-      fprintf(stderr,"\rRendering (%d nspp) %5.2f%%", nspp, 100.0 * step / steps);
-      step += 1;
+      // #pragma omp critical
+      {
+        fprintf(stderr,"\rRendering (%d nspp) %5.2f%%", nspp, 100.0 * step / steps);
+        step += 1;
+      }
 
       if (nspp == 1) {
         ray = scn->cam->get_ray(float(i)/float(w), float(j)/float(w));

@@ -355,6 +355,8 @@ int scene_t::parse_lights(XMLElement* _elm)
 			lits.push_back(parse_pointlight(elm_child));
 		else if (name == "arealight")
 			lits.push_back(parse_arealight(elm_child));
+		else if (name == "rectlight")
+			lits.push_back(parse_rectlight(elm_child));
 		else
 			throw std::invalid_argument("Invalid light in scene file.");
 
@@ -379,6 +381,17 @@ light_t* scene_t::parse_arealight(XMLElement* _elm) {
 			parse_vector3(_elm, "center"),
 			parse_vector3(_elm, "normal"),
 			parse_vector3(_elm, "radius"),
+			parse_color(_elm, "color"),
+			parse_float(_elm, "ka"),
+			parse_int(_elm, "numshadowrays")));
+}
+
+light_t* scene_t::parse_rectlight(XMLElement* _elm) {
+	return (light_t*)(new rect_light_t(
+			parse_vector3(_elm, "center"),
+			parse_vector3(_elm, "normal"),
+			parse_vector3(_elm, "a"),
+			parse_vector3(_elm, "b"),
 			parse_color(_elm, "color"),
 			parse_float(_elm, "ka"),
 			parse_int(_elm, "numshadowrays")));

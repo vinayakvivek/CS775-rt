@@ -57,5 +57,9 @@ namespace rt
 
 		/// Returns a point along the ray at _t
 		const Vector3f operator()(const float _t) const;
-	};
+
+    bool rayTriangleIntersect(
+      const Vector3f &v0, const Vector3f &v1, const Vector3f &v2,
+      float &t, float &u, float &v) const;
+  };
 }

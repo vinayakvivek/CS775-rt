@@ -11,12 +11,12 @@
     <width float="600" />
     <height float="600" />
     <bgcolor color="0.0 0.0 0.0" />
-    <samples-per-pixel int="10" />
+    <samples-per-pixel int="1" />
 </image>
 
 <materials>
     <simplemat id="diffuse">
-        <diffuse color="0.5 0.5 0.5" />
+        <diffuse color="0.7 0.7 0.7" />
         <specular color="0.0 0.0 0.0" />
         <reflect color="0.0 0.0 0.0" />
         <transmit color="0.0 0.0 0.0" />
@@ -32,7 +32,7 @@
         <reflect color="1.0 1.0 1.0" />
         <transmit color="0.0 0.0 0.0" />
         <eta float="0.0"/>
-        <n float="100" />
+        <n float="10" />
         <isreflect bool="true"/>
         <istransmit bool="false"/>
     </simplemat>
@@ -50,16 +50,14 @@
 </materials>
 
 <objects>
-    <sphere material="metal">
+
+    <mesh material="metal">
         <color color="0.999 0.999 0.999" />
-        <center vector3="0.8 0.0 -3.0" />
-        <radius float="0.6" />
-    </sphere>
-    <sphere material="glass">
-        <color color="0.999 0.999 0.999" />
-        <center vector3="-0.8 0.0 -2.0" />
-        <radius float="0.6" />
-    </sphere>
+        <center vector3="0.5 0.2 -3.0" />
+        <objfile string="./objs/cube.obj" />
+        <scale vector3="1.0 1.0 1.0" />
+        <rotation vector3="0.0 50.0 70.0" />
+    </mesh>
 
     <!-- back -->
     <sphere material="diffuse">
@@ -106,30 +104,14 @@
 </objects>
 
 <lights>
-    <rectlight>
-        <center vector3="0.0 1.5 -4.99" />
-        <normal vector3="0.0 0.0 1.0" />
-        <a vector3="0.0 0.7 0.0" />
-        <b vector3="0.7 0.0 0.0" />
-        <color color="5.0 5.0 5.0" />
-        <ka float="0.6" />
-        <numshadowrays int="10" />
-    </rectlight>
-
-    <!-- <arealight>
+    <arealight>
         <center vector3="0.0 2.59 -1.5" />
         <normal vector3="0.0 -1.0 0.0" />
         <radius vector3="0.0 0.0 0.7" />
-        <color color="5.0 5.0 5.0" />
+        <color color="1.5 1.5 1.5" />
         <ka float="0.6" />
         <numshadowrays int="10" />
-    </arealight> -->
-
-   <!--  <pointlight>
-        <position vector3="0.0 2.5 -1.5" />
-        <color color="3.0 3.0 3.0" />
-        <ka float="0.6" />
-    </pointlight> -->
+    </arealight>
 </lights>
 
 <integrator>
