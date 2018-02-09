@@ -73,13 +73,15 @@
 </objects>
 
 <lights>
-	<arealight>
-        <center vector3="0.0 500.59 -1.5" />
-        <normal vector3="0.0 -1.0 0.0" />
-        <radius vector3="0.0 0.0 0.7" />
-        <color color="1.0 1.0 1.0" />
+	<rectlight>
+        <center vector3="0.0 2.59 -2.0" />
+        <normal vector3="0.0 1.0 0.0" />
+        <a vector3="0.0 0.0 0.7" />
+        <b vector3="0.7 0.0 0.0" />
+        <color color="5.0 5.0 5.0" />
         <ka float="0.6" />
-    </arealight>
+        <numshadowrays int="10" />
+    </rectlight>
 </lights>
 
 <integrator>

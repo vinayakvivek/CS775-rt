@@ -280,7 +280,8 @@ object_t* scene_t::parse_object_mesh(XMLElement* _elm, const std::list<material_
 											parse_property(_elm, "objfile", "string"),
 											parse_vector3(_elm,  "center"),
 											parse_vector3(_elm,  "scale"),
-											parse_vector3(_elm,  "rotation")
+											parse_vector3(_elm,  "rotation"),
+											parse_bool(_elm, "showbbox")
 										));
 }
 

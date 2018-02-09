@@ -41,6 +41,11 @@ namespace rt
       const Vector3f &rft,  // right-front-top
       const Vector3f &lbb   // left-back-bottom)
     );
+    bounding_box_t(
+      const Vector3f &rft,  // right-front-top
+      const Vector3f &lbb,   // left-back-bottom)
+      const transform_t &transform
+    );
     bool intersect(const ray_t &ray, float &t) const;
   };
 
@@ -54,6 +59,8 @@ namespace rt
     bounding_box_t bounding_box;
     transform_t transform;
 
+    bool show_bounding_box;
+
    public:
 
     mesh_t(
@@ -63,7 +70,8 @@ namespace rt
       std::string obj_file,
       Vector3f _center,
       Vector3f _scale,
-      Vector3f _rot);
+      Vector3f _rot,
+      bool show_bounding_box = false);
 
     virtual ~mesh_t();
 

@@ -59,6 +59,25 @@ bounding_box_t::bounding_box_t(
   faces[5] = plane_t(Vector3f(0.0, 0.0, -1.0), lbb);  // left
 }
 
+bounding_box_t::bounding_box_t(
+  const Vector3f &_rft,  // right-front-top
+  const Vector3f &_lbb,   // left-back-bottom)
+  const transform_t &transform
+) {
+  // TODO: transform normals and vertex points
+  Vector3f rft = transform.transform_point(_rft);
+  Vector3f lbb = transform.transform_point(_lbb);
+
+  faces[0] = plane_t(transform.transform_normal(Vector3f(1.0, 0.0, 0.0)), rft);  // front
+  faces[1] = plane_t(transform.transform_normal(Vector3f(-1.0, 0.0, 0.0)), lbb);  // back
+
+  faces[2] = plane_t(transform.transform_normal(Vector3f(0.0, 1.0, 0.0)), rft);  // top
+  faces[3] = plane_t(transform.transform_normal(Vector3f(0.0, -1.0, 0.0)), lbb);  // bottom
+
+  faces[4] = plane_t(transform.transform_normal(Vector3f(0.0, 0.0, 1.0)), rft);  // right
+  faces[5] = plane_t(transform.transform_normal(Vector3f(0.0, 0.0, -1.0)), lbb);  // left
+}
+
 bool bounding_box_t::intersect(const ray_t &ray, float &t) const {
   float te = kEpsilon, tl = std::numeric_limits<float>::infinity();
   bool is_entering = false;
@@ -82,7 +101,8 @@ mesh_t::mesh_t(
   std::string obj_file,
   Vector3f _center,
   Vector3f _scale,
-  Vector3f _rot
+  Vector3f _rot,
+  bool show_bounding_box
 ): object_t(_mat, _color) {
 
   std::cout << "texture: " << texture_file << "\n";
@@ -137,6 +157,7 @@ mesh_t::mesh_t(
   transform = transform_t(trans_matrix * scale_matrix * rot_matrix);
   num_triangles = 0;
   this->center = _center;
+  this->show_bounding_box = show_bounding_box;
   // mat = _mat;
 
   std::vector<Vector3f> face;
@@ -160,13 +181,13 @@ mesh_t::mesh_t(
         Vector3f t_point = transform.transform_point(Vector3f(vx, vy, vz));
         face.push_back(t_point);
 
-        rft.x() = fmax(t_point.x(), rft.x());
-        rft.y() = fmax(t_point.y(), rft.y());
-        rft.z() = fmax(t_point.z(), rft.z());
+        rft.x() = fmax(vx, rft.x());
+        rft.y() = fmax(vy, rft.y());
+        rft.z() = fmax(vz, rft.z());
 
-        lbb.x() = fmin(t_point.x(), lbb.x());
-        lbb.y() = fmin(t_point.y(), lbb.y());
-        lbb.z() = fmin(t_point.z(), lbb.z());
+        lbb.x() = fmin(vx, lbb.x());
+        lbb.y() = fmin(vy, lbb.y());
+        lbb.z() = fmin(vz, lbb.z());
       }
       index_offset += fv;
 
@@ -182,8 +203,7 @@ mesh_t::mesh_t(
     }
   }
 
-  bounding_box = bounding_box_t(rft, lbb);
-
+  bounding_box = bounding_box_t(rft, lbb, transform);
   std::cout << "preprocessing done.\n";
 }
 
@@ -195,18 +215,23 @@ mesh_t::~mesh_t() {}
 
 bool mesh_t::intersect(hit_t& result, const ray_t& _ray) const {
   float curr_t = _ray.maxt;
-  Vector3f curr_normal;
+  Vector3f curr_normal = Vector3f(0.0, 1.0, 0.0);
   float t;
 
   bool found_intersection = false;
 
   if (bounding_box.intersect(_ray, t)) {
-    for (triangle_t tri : triangles) {
-      if (tri.intersect(_ray, t)) {
-        if (t < curr_t && t > _ray.mint) {
-          curr_t = t;
-          curr_normal = tri.N;
-          found_intersection = true;
+    if (show_bounding_box) {
+      found_intersection = true;
+      curr_t = t;
+    } else {
+      for (triangle_t tri : triangles) {
+        if (tri.intersect(_ray, t)) {
+          if (t < curr_t && t > _ray.mint) {
+            curr_t = t;
+            curr_normal = tri.N;
+            found_intersection = true;
+          }
         }
       }
     }
