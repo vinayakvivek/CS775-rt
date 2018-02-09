@@ -82,8 +82,8 @@ namespace rt
 
 		virtual bool intersect(light_hit_t& result, const ray_t& _ray) const = 0;
 
-		virtual color_t get_color() const = 0;
-		virtual float get_ka() const = 0;
+		color_t get_color() const {return color_t(col.x(), col.y(), col.z());}
+		float get_ka() const {return ka;}
 
 		/// Prints information about the light to the stream.
 		virtual void print(std::ostream &stream) const = 0;
@@ -99,29 +99,12 @@ namespace rt
 		Vector3f pos;
 
 	public:
-		/// Constructor
 		point_light_t(const Vector3f& _pos, const Vector3f& _col, const float _ka);
-
-    /// Destructor
 		virtual ~point_light_t();
 
-		/**
-		* Returns the direct illumination estimate for the point hitpt, where the surface normal is normal, material is mat.
-		* Scene is passed so that the camera position, and the objects can be used for computing the specular component
-		* of direct illumination and the shadow computations.
-		**/
-		// virtual color_t direct(const Vector3f& hitpt, const ray_t &view_ray, const Vector3f& normal, const material_t* mat, const scene_t* scn) const;
-
-		virtual bool intersect(light_hit_t& result, const ray_t& _ray) const {
-			return false;
-		}
-
+    virtual bool intersect(light_hit_t& result, const ray_t& _ray) const;
     virtual Vector3f sample_point() const;
 
-		virtual color_t get_color() const {return color_t(col.x(), col.y(), col.z());}
-		virtual float get_ka() const {return ka;}
-
-		/// Prints information about the light to the stream.
 		virtual void print(std::ostream &stream) const;
 	};
 
@@ -138,15 +121,9 @@ namespace rt
 			area_light_t(const Vector3f &_center, const Vector3f _normal, const Vector3f _radius, const Vector3f& _col, float _ka, int _num_shadowrays);
 			virtual ~area_light_t() {}
 
-    	// virtual color_t direct(const Vector3f& hitpt, const ray_t &view_ray, const Vector3f& normal, const material_t* mat, const scene_t* scn) const;
-
-      /// Prints information about the light to the stream.
-			virtual void print(std::ostream &stream) const;
-
 			virtual Vector3f sample_point() const;
 			virtual bool intersect(light_hit_t& result, const ray_t& _ray) const;
 
-			virtual color_t get_color() const {return color_t(col.x(), col.y(), col.z());}
-			virtual float get_ka() const {return ka;}
+      virtual void print(std::ostream &stream) const;
 	};
 }

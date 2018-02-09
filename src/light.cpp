@@ -64,6 +64,10 @@ Vector3f point_light_t::sample_point() const {
 	return pos;
 }
 
+bool point_light_t::intersect(light_hit_t& result, const ray_t& _ray) const {
+	return false;
+}
+
 void point_light_t::print(std::ostream &stream) const
 {
 	Eigen::IOFormat CommaInitFmt(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", ", ", "", "", "[ ", " ]");
