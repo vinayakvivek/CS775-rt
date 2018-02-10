@@ -75,6 +75,8 @@ namespace rt
 		/// This only returns one sample per pixel.
 		Eigen::Vector2f sample_pixel(unsigned int _x, unsigned int _y) const;
 
+    std::vector<Vector2f> samples(unsigned int _x, unsigned int _y) const;
+
 		/// Returns the color value for the pixel at the given location from framebuffer data.
 		color_t get_pixel(unsigned int _x, unsigned int _y) const;
 		/// Sets the color for the pixel at given location in the framebuffer data.

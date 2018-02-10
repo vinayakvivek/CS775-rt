@@ -48,6 +48,14 @@ Eigen::Vector2f image_t::sample_pixel(unsigned int _x, unsigned int _y) const
 	return Eigen::Vector2f(float(_x + erand48())/width, float(_y + erand48())/height);
 }
 
+std::vector<Vector2f> image_t::samples(unsigned int _x, unsigned int _y) const {
+  std::vector<Vector2f> random_samples;
+  for (int i = 0; i < nspp; ++i) {
+    random_samples.push_back(Vector2f(float(_x + erand48())/width, float(_y + erand48())/height));
+  }
+  return random_samples;
+}
+
 color_t image_t::get_pixel(unsigned int _x, unsigned int _y) const
 {
 	int pos=(_y)*width*3+(_x)*3;

@@ -30,12 +30,19 @@ void rt::render(const scene_t* scn, std::string file_name)
         ray = scn->cam->get_ray(float(i)/float(w), float(j)/float(w));
         col += scn->intg->radiance(scn, ray, 0);
       } else {
-        for (int s = 0; s < nspp; ++s) {
-          sample = scn->img->sample_pixel(i, j);
+        std::vector<Vector2f> samples = scn->img->samples(i, j);
+        // for (int s = 0; s < nspp; ++s) {
+        //   sample = scn->img->sample_pixel(i, j);
+        //   ray = scn->cam->get_ray(sample.x(), sample.y());
+        //   // ray = scn->cam->get_ray(float(i + erand48())/float(w), float(j + erand48())/float(w));
+        //   col += scn->intg->radiance(scn, ray, 0);
+        // }
+
+        for (Vector2f sample: samples) {
           ray = scn->cam->get_ray(sample.x(), sample.y());
-          // ray = scn->cam->get_ray(float(i + erand48())/float(w), float(j + erand48())/float(w));
           col += scn->intg->radiance(scn, ray, 0);
         }
+
         col /= nspp;
       }
       scn->img->set_pixel(i, j, col);
