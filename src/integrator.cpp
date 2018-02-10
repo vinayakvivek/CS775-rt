@@ -207,6 +207,15 @@ color_t path_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) con
 		d_col += f * specular * pow(cosa, shininess) * _scn->intg->radiance(_scn, reflected_ray, d+1);
 		return d_col;
 
+		// ray_t reflected_ray;
+		// reflected_ray.origin = hitpt;
+		// float pdf = 1.0;
+
+		// color_t fr = BRDF::specular(_ray, n, reflected_ray, minhit.obj->get_material(), pdf);
+		// // std::cout << fr.x() << ", " << fr.y() << ", " << fr.z() << "\n";
+		// d_col += f * fr * _scn->intg->radiance(_scn, reflected_ray, d+1) * (n.dot(reflected_ray.direction)) / pdf;
+		// return d_col;
+
 	} else {
 		// DIELECTRIC
 		ray_t reflected_ray, transmitted_ray;

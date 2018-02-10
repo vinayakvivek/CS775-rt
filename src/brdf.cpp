@@ -12,7 +12,7 @@ Vector3f cosineSampleHemisphere(float u1, float u2){
 }
 
 
-void BRDF::specular(
+color_t BRDF::specular(
   const ray_t &iray,
   const Vector3f &n,
   ray_t &rray,
@@ -26,14 +26,18 @@ void BRDF::specular(
   u.normalize();
   Vector3f v = u.cross(w);
 
-  Vector3f sp = cosineSampleHemisphere(erand48(), erand48())
+  Vector3f sp = cosineSampleHemisphere(erand48(), erand48());
   Vector3f wi = sp.x() * u + sp.y() * v + sp.z() * w;
 
   if (n.dot(wi) < 0.0)  // reflected ray is below surface
     wi = -sp.x() * u - sp.y() * v + sp.z() * w;
 
+  wi = wi.normalized();
+
   float phong_lobe = pow(r.dot(wi), mat->get_shininess());
   pdf = phong_lobe * (n.dot(wi));
+
+  rray.direction = wi;
 
   return mat->get_specular() * phong_lobe;
 }

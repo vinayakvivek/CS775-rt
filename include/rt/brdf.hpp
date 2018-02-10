@@ -10,7 +10,7 @@ namespace rt
 {
   class BRDF {
    public:
-    static void specular(
+    static color_t specular(
       const ray_t &iray,
       const Vector3f &n,
       ray_t &rray,

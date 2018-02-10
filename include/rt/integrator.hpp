@@ -28,6 +28,7 @@
 #include <ray.hpp>
 #include <scene.hpp>
 #include <utils.hpp>
+#include <brdf.hpp>
 
 namespace rt
 {
