@@ -194,7 +194,7 @@ color_t path_integrator_t::radiance(const scene_t* _scn, ray_t& _ray, int d) con
 		double fuzz = 0.05;
 
 		ray_t reflected_ray;
-		reflected_ray.origin = hitpt;
+		reflected_ray.origin = hitpt + EPSILON * n;
 		reflect(_ray, n, reflected_ray);
 
 		Vector3f specular_dir = (reflected_ray.direction + fuzz * randomInUnitSphere()).normalized();
