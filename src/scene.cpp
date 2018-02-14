@@ -213,6 +213,23 @@ camera_t* scene_t::parse_camera(XMLElement* _elm)
 	if (!elm_camera)
 		throw std::runtime_error("Scene file does not contain a camera.");
 
+	XMLElement* subelm_aperture = elm_camera->FirstChildElement("aperture");
+	XMLElement* subelm_vfov = elm_camera->FirstChildElement("fov");
+	XMLElement* subelm_dfocus = elm_camera->FirstChildElement("focus-distance");
+	XMLElement* subelm_aspect = elm_camera->FirstChildElement("aspect");
+
+	if (subelm_aperture && subelm_vfov && subelm_dfocus && subelm_aspect) {
+		return (new camera_t(
+					parse_vector3(elm_camera, "eye"),
+					parse_vector3(elm_camera, "lookat"),
+					parse_vector3(elm_camera, "up"),
+					parse_angle(elm_camera, "fov"),
+					parse_float(elm_camera, "aspect"),
+					parse_float(elm_camera, "aperture"),
+					parse_float(elm_camera, "focus-distance")
+				));
+	}
+
 	return (new camera_t(
 					parse_vector3(elm_camera, "lookat"),
 					parse_vector3(elm_camera, "eye"),

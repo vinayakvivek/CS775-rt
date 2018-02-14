@@ -8,7 +8,7 @@
 </camera> -->
 
 <camera>
-    <eye    vector3="0.0 1.5 5.0" />
+    <eye    vector3="0.0 1.5 10.0" />
     <lookat vector3="0.0 1.0 0.0" />
     <up     vector3="0.0 -1.0 0.0" />
     <fov    angle="50 deg" />
@@ -18,7 +18,7 @@
     <width float="600" />
     <height float="600" />
     <bgcolor color="0.1 0.1 0.1" />
-    <samples-per-pixel int="10" />
+    <samples-per-pixel int="1" />
 </image>
 
 <materials>
@@ -59,40 +59,52 @@
 <objects>
     <sphere material="metal">
         <color color="1.0 1.0 1.0" />
-        <center vector3="0.8 0.0 -3.0" />
+        <center vector3="0.8 0.6 -3.0" />
         <radius float="0.6" />
     </sphere>
 
     <sphere material="glass">
         <color color="0.999 0.999 0.999" />
-        <center vector3="0.0 0.0 0.0" />
+        <center vector3="0.0 0.6 0.0" />
         <radius float="0.6" />
     </sphere>
 
     <sphere material="diffuse">
         <color color="1.0 1.0 0.3" />
-        <center vector3="-0.8 0.0 -2.0" />
+        <center vector3="-0.8 0.6 -2.0" />
+        <radius float="0.6" />
+    </sphere>
+
+    <sphere material="diffuse">
+        <color color="0.78 0.59 0.3" />
+        <center vector3="1.5 0.3 2.0" />
+        <radius float="0.3" />
+    </sphere>
+
+    <sphere material="metal">
+        <color color="1.0 1.0 1.0" />
+        <center vector3="-1.0 2.5 2.5" />
         <radius float="0.6" />
     </sphere>
 
     <!-- bottom -->
-    <sphere material="metal">
+    <sphere material="diffuse">
         <color color=".75 .75 .75" />
-        <center vector3="0.0 -1000.6 0.0" />
+        <center vector3="0.0 -1000.0 0.0" />
         <radius float="1000" />
     </sphere>
 
     <!-- top -->
     <sphere material="diffuse">
-        <color color=".75 .75 .75" />
-        <center vector3="0.0 1002.6 0.0" />
-        <radius float="1000" />
+        <color color="0.5 0.9 0.9" />
+        <center vector3="0.0 103.5 0.0" />
+        <radius float="100" />
     </sphere>
 
     <!-- back -->
     <sphere material="diffuse">
         <color color="0.0 0.0 0.0" />
-        <center vector3="0.0 0.0 1006.0" />
+        <center vector3="0.0 0.0 1015.0" />
         <radius float="1000" />
     </sphere>
 
@@ -106,14 +118,14 @@
     <!-- left -->
     <sphere material="metal">
         <color color=".75 .25 .25" />
-        <center vector3="1001.8 0.0 0.0" />
+        <center vector3="1003.8 0.0 0.0" />
         <radius float="1000" />
     </sphere>
 
     <!-- right -->
     <sphere material="metal">
         <color color=".25 .25 .75" />
-        <center vector3="-1001.8 0.0 0.0" />
+        <center vector3="-1003.8 0.0 0.0" />
         <radius float="1000" />
     </sphere>
 
@@ -121,7 +133,7 @@
 
 <lights>
     <rectlight>
-        <center vector3="0.0 2.59 -1.5" />
+        <center vector3="0.0 3.49 -1.5" />
         <normal vector3="0.0 1.0 0.0" />
         <a vector3="0.0 0.0 0.7" />
         <b vector3="0.7 0.0 0.0" />
